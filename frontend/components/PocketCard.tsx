@@ -1,0 +1,51 @@
+'use client';
+
+import { motion } from 'framer-motion';
+import { GraduationCap, PiggyBank, Heart } from 'lucide-react';
+
+const icons = {
+  tuition: GraduationCap,
+  savings: PiggyBank,
+  medical: Heart,
+};
+
+interface PocketCardProps {
+  name: string;
+  balance: number;
+  goal: number;
+  color: string;
+}
+
+export default function PocketCard({ name, balance, goal, color }: PocketCardProps) {
+  const Icon = icons[name as keyof typeof icons];
+  const progress = (balance / goal) * 100;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="p-4 bg-surface rounded-lg border border-white/10"
+    >
+      <div className="flex items-center gap-3 mb-3">
+        <div className={`p-2 rounded-lg ${color}`}>
+          <Icon size={20} />
+        </div>
+        <div>
+          <h3 className="font-bold capitalize">{name}</h3>
+          <p className="text-sm text-gray-400">${balance.toFixed(2)} / ${goal}</p>
+        </div>
+      </div>
+      
+      <div className="w-full bg-dark rounded-full h-2 mb-3">
+        <div
+          className={`h-2 rounded-full ${color} transition-all`}
+          style={{ width: `${Math.min(progress, 100)}%` }}
+        />
+      </div>
+      
+      <button className="w-full py-2 border border-primary text-primary rounded hover:bg-primary/10 transition">
+        {name === 'tuition' ? 'Pay School' : name === 'savings' ? 'Add to Yield' : 'Withdraw'}
+      </button>
+    </motion.div>
+  );
+}

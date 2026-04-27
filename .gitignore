@@ -1,0 +1,21 @@
+# Node
+node_modules/
+.next/
+out/
+build/
+
+# Rust
+target/
+**/*.rs.bk
+
+# Environment
+.env
+.env.local
+.env.production
+
+# OS
+.DS_Store
+*.pem
+
+# Test artifacts
+test_snapshots/
