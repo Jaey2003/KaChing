@@ -53,11 +53,24 @@ npm run dev
 ```
 
 ## 📜 Smart Contract Logic
-The core contract (`contracts/src/lib.rs`) manages the `process_split` function:
-1. Receives a total amount and a vector of `PocketAllocation` structs.
-2. Validates that the total percentage equals 100%.
-3. Calculates the exact amount for each recipient based on the percentage.
-4. Executes multiple transfers in a single atomic transaction.
+
+### 🏗️ Architecture
+The KaChing Smart Contract is built with Rust and optimized for the Soroban runtime. It acts as a trustless router for cross-border funds.
+
+<div align="center">
+  <img src="media/smart-contract.png" alt="Smart Contract Architecture" width="100%" />
+</div>
+
+### 🔄 Contract Function Flow
+The core logic begins once the user initiates a **Direct Transaction** or **Pocket Split** from the frontend:
+
+1. **Transaction Initialization**: The frontend builds a Soroban transaction containing the total amount, the asset type (XLM/USDC), and a vector of recipients (Pockets).
+2. **Freighter Signing**: The user reviews and signs the transaction via the Freighter wallet, ensuring full custody and security.
+3. **Soroban Invocation**: The signed XDR is submitted to the network, invoking the `process_split` function on the KaChing contract.
+4. **Validation & Calculation**: 
+   - The contract verifies that the sum of all pocket percentages equals exactly 100%.
+   - It performs high-precision arithmetic to calculate the exact stroop/token amount for each recipient.
+5. **Atomic Execution**: The contract executes all transfers in a single atomic transaction. Either every recipient receives their funds, or the entire transaction fails, preventing any "lost" money.
 
 ## 📜 Smart Contract Deployment
 The KaChing core logic is handled by a Soroban smart contract. There are two ways to deploy it:
