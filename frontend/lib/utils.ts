@@ -11,9 +11,9 @@ export function playKaChingSound() {
 
 export function mockAnchorQuotes(amount: number) {
   return [
-    { id: 'coinsph', name: 'Coins.ph', feePct: 0.8, fixed: 0, eta: 2 },
-    { id: 'velo', name: 'Velo', feePct: 1.2, fixed: 0, eta: 1 },
-    { id: 'maya', name: 'Maya', feePct: 0.5, fixed: 25, eta: 3 },
+    { id: 'sdf_test', name: 'Stellar Test Anchor (SDF)', feePct: 0.1, fixed: 0, eta: 1, domain: 'testanchor.stellar.org' },
+    { id: 'moneygram', name: 'MoneyGram Access', feePct: 0.0, fixed: 0, eta: 5, domain: 'moneygram.com' },
+    { id: 'coinsph', name: 'Coins.ph', feePct: 0.8, fixed: 0, eta: 2, domain: 'coins.ph' },
   ].map(anchor => {
     const fee = Math.max(anchor.fixed, (amount * anchor.feePct) / 100);
     return { ...anchor, totalFee: fee, totalCost: amount + fee };

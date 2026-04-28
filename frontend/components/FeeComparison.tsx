@@ -80,6 +80,13 @@ export default function FeeComparison() {
                     <span className="text-[10px] font-medium text-gray-400">
                       Fee: {quote.feePct}%
                     </span>
+                    {/* @ts-ignore */}
+                    {quote.domain && (
+                      <span className="text-[10px] font-medium text-primary/60 italic">
+                        {/* @ts-ignore */}
+                        {quote.domain}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="text-right">
