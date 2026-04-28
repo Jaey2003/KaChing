@@ -6,6 +6,7 @@ use soroban_sdk::{contract, contractimpl, contracttype, vec, Address, Env, Vec, 
 pub struct PocketAllocation {
     pub name: Symbol,
     pub percentage: u32,
+    pub recipient: Address,
 }
 
 #[contract]

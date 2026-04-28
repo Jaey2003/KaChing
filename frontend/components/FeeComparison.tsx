@@ -45,6 +45,8 @@ export default function FeeComparison() {
     setIsTransacting(true);
     setError(null);
 
+    const userAddress = sessionStorage.getItem('kaChing_user') || '';
+
     try {
       // 1. Trigger Auto-Deploy on the server
       const deployRes = await fetch('/api/auto-deploy', { method: 'POST' });
@@ -58,9 +60,18 @@ export default function FeeComparison() {
       console.log('Contract auto-deployed:', newContractId);
 
       // 2. Call the newly deployed Soroban smart contract
+      // Map pockets to include the recipient address
+      const formattedPockets = pocketData.map(p => ({
+        name: p.name,
+        percentage: p.percentage,
+        // If direct mode, use the recipient address. 
+        // If pockets mode, we'll use the user's own address as the target for now.
+        recipient: mode === 'direct' ? recipient : userAddress
+      }));
+
       await processSplit(
         amount, 
-        pocketData.map(p => ({ name: p.name, percentage: p.percentage })),
+        formattedPockets,
         newContractId
       );
       

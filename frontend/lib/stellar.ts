@@ -73,7 +73,7 @@ export async function fetchAccountBalance(publicKey: string): Promise<StellarAss
  */
 export async function processSplit(
   amount: number,
-  pockets: { name: string; percentage: number }[],
+  pockets: { name: string; percentage: number; recipient: string }[],
   overrideContractId?: string
 ) {
   const publicKey = sessionStorage.getItem('kaChing_user');
@@ -94,6 +94,10 @@ export async function processSplit(
     new xdr.ScMapEntry({
       key: xdr.ScVal.scvSymbol('percentage'),
       val: xdr.ScVal.scvU32(p.percentage)
+    }),
+    new xdr.ScMapEntry({
+      key: xdr.ScVal.scvSymbol('recipient'),
+      val: new Address(p.recipient).toScVal()
     })
   ]));
 
