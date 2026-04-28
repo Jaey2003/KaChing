@@ -6,6 +6,7 @@ import { mockAnchorQuotes, playKaChingSound } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { processSplit } from '@/lib/stellar';
+import { saveTransaction } from '@/lib/history';
 
 export default function FeeComparison() {
   const router = useRouter();
@@ -76,6 +77,18 @@ export default function FeeComparison() {
         newContractId
       );
       
+      // Save to history
+      saveTransaction({
+        type: mode as 'direct' | 'pockets',
+        amount,
+        asset,
+        fee: bestQuote.feePct,
+        anchor: bestQuote.name,
+        recipient: mode === 'direct' ? recipient : undefined,
+        pockets: mode === 'pockets' ? pocketData : undefined,
+        status: 'completed'
+      });
+
       if (shouldPlaySound) {
         playKaChingSound();
       }
