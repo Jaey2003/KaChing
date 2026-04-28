@@ -74,6 +74,7 @@ export async function fetchAccountBalance(publicKey: string): Promise<StellarAss
 export async function processSplit(
   amount: number,
   pockets: { name: string; percentage: number; recipient: string }[],
+  assetCode: string,
   overrideContractId?: string
 ) {
   const publicKey = sessionStorage.getItem('kaChing_user');
@@ -81,6 +82,14 @@ export async function processSplit(
 
   const finalContractId = overrideContractId || contractId;
   if (!finalContractId) throw new Error('No contract ID available');
+
+  // Testnet Token Contract IDs
+  const TOKEN_ADDRESSES: Record<string, string> = {
+    'XLM': 'CDLZFC3SYJYDZT7K67VZ75YJ36A2CHYRE6477KIP6Y6NLR6YJMTMGNRZ', // Native XLM Contract
+    'USDC': 'GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5' // Example USDC
+  };
+
+  const tokenAddress = TOKEN_ADDRESSES[assetCode.toUpperCase()] || TOKEN_ADDRESSES['XLM'];
 
   const contract = new Contract(finalContractId);
   const account = await server.loadAccount(publicKey);
@@ -105,6 +114,7 @@ export async function processSplit(
     .addOperation(contract.call(
       'process_split',
       new Address(publicKey).toScVal(),
+      new Address(tokenAddress).toScVal(),
       xdr.ScVal.scvI128(xdr.Int128.fromString((amount * 10_000_000).toString())), // Native units
       xdr.ScVal.scvVec(pocketScVals)
     ))
