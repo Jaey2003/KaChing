@@ -29,13 +29,20 @@
 ## 🚀 Quick Start
 
 ### 1. Prerequisites
-- **Stellar Freighter Wallet**: Installed in your browser and set to **Testnet**.
-- **Node.js 18+**
-- **Rust & Soroban CLI** (for contract development)
+
+#### **For Smart Contract Development:**
+- **Rust**: Version 1.70 or higher (`rustup update stable`)
+- **WASM Target**: `rustup target add wasm32-unknown-unknown`
+- **Soroban CLI**: Version 21.0.0 or higher (`cargo install --locked soroban-cli`)
+
+#### **For Frontend Development:**
+- **Node.js**: Version 18.0.0 or higher
+- **NPM**: Version 9.0.0 or higher (comes with Node)
+- **Stellar Freighter Wallet**: Installed as a browser extension and set to **Testnet**.
 
 ### 2. Setup
 ```bash
-# Install dependencies
+# Install frontend dependencies
 cd frontend
 npm install
 
