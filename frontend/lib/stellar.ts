@@ -130,7 +130,8 @@ export async function processSplit(
   }
 
   const preparedTx = SorobanRpc.assembleTransaction(tx, sim);
-  const signedXdr = await Freighter.signTransaction(preparedTx.toXDR(), { networkPassphrase });
+  const xdrString = typeof preparedTx === 'string' ? preparedTx : preparedTx.toXDR();
+  const signedXdr = await signTransaction(xdrString);
   
   const sendRes = await rpcServer.sendTransaction(TransactionBuilder.fromXDR(signedXdr, networkPassphrase));
   if (sendRes.status === 'ERROR') {
