@@ -1,4 +1,4 @@
-import { Horizon, Networks, Asset, TransactionBuilder, BASE_FEE, Contract, Address, xdr, SorobanRpc } from '@stellar/stellar-sdk';
+import { Horizon, Networks, Asset, TransactionBuilder, BASE_FEE, Contract, Address, xdr, SorobanRpc, nativeToScVal } from '@stellar/stellar-sdk';
 import * as Freighter from '@stellar/freighter-api';
 
 declare global {
@@ -94,29 +94,17 @@ export async function processSplit(
   const contract = new Contract(finalContractId);
   const account = await server.loadAccount(publicKey);
 
-  // Convert pockets to ScVal Vec
-  const pocketScVals = pockets.map(p => xdr.ScVal.scvMap([
-    new xdr.ScMapEntry({
-      key: xdr.ScVal.scvSymbol('name'),
-      val: xdr.ScVal.scvSymbol(p.name.toLowerCase())
-    }),
-    new xdr.ScMapEntry({
-      key: xdr.ScVal.scvSymbol('percentage'),
-      val: xdr.ScVal.scvU32(p.percentage)
-    }),
-    new xdr.ScMapEntry({
-      key: xdr.ScVal.scvSymbol('recipient'),
-      val: new Address(p.recipient).toScVal()
-    })
-  ]));
-
   const tx = new TransactionBuilder(account, { fee: BASE_FEE, networkPassphrase })
     .addOperation(contract.call(
       'process_split',
       new Address(publicKey).toScVal(),
       new Address(tokenAddress).toScVal(),
-      xdr.ScVal.scvI128(xdr.Int128.fromString((amount * 10_000_000).toString())), // Native units
-      xdr.ScVal.scvVec(pocketScVals)
+      nativeToScVal(BigInt(Math.floor(amount * 10_000_000))), // Native units as i128
+      nativeToScVal(pockets.map(p => ({
+        name: xdr.ScVal.scvSymbol(p.name.toLowerCase()),
+        percentage: p.percentage,
+        recipient: new Address(p.recipient)
+      })))
     ))
     .setTimeout(30)
     .build();
