@@ -78,7 +78,7 @@ export default function FeeComparison() {
                       <Clock size={10} /> {quote.eta}m
                     </span>
                     <span className="text-[10px] font-medium text-gray-400">
-                      Fee: {quote.feePct}%
+                      Fee: {quote.feePct}% ({quote.totalFee.toFixed(2)} {asset})
                     </span>
                     {/* @ts-ignore */}
                     {quote.domain && (
