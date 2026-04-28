@@ -1,4 +1,4 @@
-import { Horizon, Networks, Asset, TransactionBuilder, BASE_FEE, Contract, Address, xdr, SorobanRpc, nativeToScVal } from '@stellar/stellar-sdk';
+import { Horizon, Networks, Asset, TransactionBuilder, Transaction, BASE_FEE, Contract, Address, xdr, SorobanRpc, nativeToScVal } from '@stellar/stellar-sdk';
 import * as Freighter from '@stellar/freighter-api';
 
 declare global {
@@ -129,8 +129,19 @@ export async function processSplit(
     throw new Error('Simulation failed: ' + sim.error);
   }
 
-  const preparedTx = SorobanRpc.assembleTransaction(tx, sim);
-  const xdrString = typeof preparedTx === 'string' ? preparedTx : preparedTx.toXDR();
+  const preparedTx = SorobanRpc.assembleTransaction(tx, sim) as any;
+  let xdrString: string;
+  
+  if (typeof preparedTx === 'string') {
+    xdrString = preparedTx;
+  } else if (preparedTx && typeof preparedTx.toXDR === 'function') {
+    xdrString = preparedTx.toXDR();
+  } else {
+    // Fallback: if assembleTransaction returns something else, try to get XDR from original tx
+    console.warn('assembleTransaction returned an unexpected type. Falling back to original tx XDR.');
+    xdrString = tx.toXDR();
+  }
+  
   const signedXdr = await signTransaction(xdrString);
   
   const sendRes = await rpcServer.sendTransaction(TransactionBuilder.fromXDR(signedXdr, networkPassphrase));
