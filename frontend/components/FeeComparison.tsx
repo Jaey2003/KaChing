@@ -1,13 +1,17 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Check, Info, ShieldCheck, ArrowRight, Wallet, Clock } from 'lucide-react';
+import { Check, Info, ShieldCheck, ArrowRight, Wallet, Clock, Loader2, AlertCircle } from 'lucide-react';
 import { mockAnchorQuotes, playKaChingSound } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { processSplit } from '@/lib/stellar';
 
 export default function FeeComparison() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [isTransacting, setIsTransacting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   const amount = parseFloat(searchParams.get('amount') || '0');
   const asset = searchParams.get('asset') || 'USDC';
@@ -37,14 +41,28 @@ export default function FeeComparison() {
     }
   });
 
-  const handleSelect = () => {
-    if (shouldPlaySound) {
-      playKaChingSound();
+  const handleSelect = async () => {
+    setIsTransacting(true);
+    setError(null);
+
+    try {
+      // Call the real Soroban smart contract
+      await processSplit(amount, pocketData.map(p => ({ name: p.name, percentage: p.percentage })));
+      
+      if (shouldPlaySound) {
+        playKaChingSound();
+      }
+      
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('fee', bestQuote.feePct.toString());
+      params.set('selectedAnchor', bestQuote.name);
+      router.push(`/success?${params.toString()}`);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || 'Transaction failed. Please try again.');
+    } finally {
+      setIsTransacting(false);
     }
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('fee', bestQuote.feePct.toString());
-    params.set('selectedAnchor', bestQuote.name);
-    router.push(`/success?${params.toString()}`);
   };
 
   return (
@@ -186,14 +204,40 @@ export default function FeeComparison() {
         </motion.div>
       )}
 
+      {error && (
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-4 bg-rose-500/10 border border-rose-500/20 rounded-2xl flex items-center gap-4"
+        >
+          <div className="w-10 h-10 rounded-full bg-rose-500/20 flex items-center justify-center text-rose-400">
+            <AlertCircle size={20} />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-bold text-rose-400">Transaction Failed</p>
+            <p className="text-xs text-rose-400/70">{error}</p>
+          </div>
+        </motion.div>
+      )}
+
       <button
         onClick={handleSelect}
-        className="w-full py-4 bg-primary text-dark font-black rounded-2xl flex items-center justify-center gap-3 hover:opacity-90 active:scale-[0.98] transition-all shadow-xl shadow-primary/20"
+        disabled={isTransacting}
+        className="w-full py-4 bg-primary text-dark font-black rounded-2xl flex items-center justify-center gap-3 hover:opacity-90 active:scale-[0.98] transition-all shadow-xl shadow-primary/20 disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed"
       >
-        {mode === 'direct' ? 'Confirm & Send Money' : 'Confirm & Execute Split'} <ArrowRight size={20} />
+        {isTransacting ? (
+          <>
+            <Loader2 size={20} className="animate-spin" /> Processing Transaction...
+          </>
+        ) : (
+          <>
+            {mode === 'direct' ? 'Confirm & Send Money' : 'Confirm & Execute Split'} <ArrowRight size={20} />
+          </>
+        )}
       </button>
     </div>
   );
 }
+
 
 
