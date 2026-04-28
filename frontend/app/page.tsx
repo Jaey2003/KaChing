@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, PieChart, ArrowRight, Wallet } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import WalletConnect from '@/components/WalletConnect';
 import SendForm from '@/components/SendForm';
 import Dashboard from '@/components/Dashboard';
@@ -10,7 +11,9 @@ import Navigation from '@/components/Navigation';
 
 export default function Home() {
   const [isConnected, setIsConnected] = useState(false);
-  const [activeTab, setActiveTab] = useState('home');
+  const searchParams = useSearchParams();
+  const initialTab = searchParams.get('tab') || 'home';
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [transferMode, setTransferMode] = useState<'direct' | 'pockets' | null>(null);
 
   useEffect(() => {
