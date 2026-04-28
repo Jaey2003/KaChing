@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import WalletConnect from '@/components/WalletConnect';
 import SendForm from '@/components/SendForm';
 import Dashboard from '@/components/Dashboard';
+import Activity from '@/components/Activity';
 import Navigation from '@/components/Navigation';
 
 export default function Home() {
@@ -25,8 +26,16 @@ export default function Home() {
       setIsConnected(!!user);
     };
 
+    const handleTabChange = (e: any) => {
+      setActiveTab(e.detail);
+    };
+
     window.addEventListener('wallet-connected', handleWalletConnect);
-    return () => window.removeEventListener('wallet-connected', handleWalletConnect);
+    window.addEventListener('change-tab', handleTabChange);
+    return () => {
+      window.removeEventListener('wallet-connected', handleWalletConnect);
+      window.removeEventListener('change-tab', handleTabChange);
+    };
   }, []);
 
   // Reset transfer mode when switching tabs
@@ -124,8 +133,8 @@ export default function Home() {
         )}
 
         {activeTab === 'activity' && (
-          <div className="flex flex-col items-center justify-center py-20 text-gray-500">
-            <p>No recent activity</p>
+          <div className="space-y-6">
+            <Activity />
           </div>
         )}
         {activeTab === 'wallet' && (
