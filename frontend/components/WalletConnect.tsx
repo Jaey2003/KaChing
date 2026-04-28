@@ -1,11 +1,14 @@
-'use client';
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { connectWallet } from '@/lib/stellar';
 import { Wallet } from 'lucide-react';
 
 export default function WalletConnect() {
   const [publicKey, setPublicKey] = useState<string | null>(null);
+
+  useEffect(() => {
+    const pk = sessionStorage.getItem('kaChing_user');
+    if (pk) setPublicKey(pk);
+  }, []);
 
   const handleConnect = async () => {
     const pk = await connectWallet();
@@ -27,4 +30,4 @@ export default function WalletConnect() {
       </button>
     </div>
   );
-}
+}
