@@ -129,19 +129,10 @@ export async function processSplit(
     throw new Error('Simulation failed: ' + sim.error);
   }
 
-  let xdrString: string;
-  try {
-    const preparedTx = SorobanRpc.assembleTransaction(tx, sim) as any;
-    xdrString = typeof preparedTx === 'string' ? preparedTx : preparedTx.toXDR();
-  } catch (e) {
-    console.warn('Standard assembly failed, using raw tx with simulation data');
-    xdrString = tx.toXDR();
-  }
+  const preparedTx = SorobanRpc.assembleTransaction(tx, sim);
+  const signedXdr = await signTransaction(preparedTx.toXDR());
   
-  const signedXdr = await signTransaction(xdrString);
-  const transactionToSubmit = TransactionBuilder.fromXDR(signedXdr, networkPassphrase);
-  
-  const sendRes = await rpcServer.sendTransaction(transactionToSubmit);
+  const sendRes = await rpcServer.sendTransaction(signedXdr);
   if (sendRes.status === 'ERROR') {
     throw new Error('Transaction submission failed: ' + JSON.stringify(sendRes));
   }
