@@ -17,9 +17,50 @@ export default function Activity({ limit, showTitle = true }: ActivityProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const history = getTransactions();
-    setTransactions(history);
-    setLoading(false);
+    async function loadHistory() {
+      const publicKey = sessionStorage.getItem('kaChing_user');
+      const localHistory = getTransactions();
+      
+      if (!publicKey) {
+        setTransactions(localHistory);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        // Fetch last 15 transactions from the blockchain
+        const horizonHistory = await fetch(`https://horizon-testnet.stellar.org/accounts/${publicKey}/transactions?limit=15&order=desc`)
+          .then(res => res.json());
+
+        const blockchainTxs: Transaction[] = horizonHistory._embedded.records.map((record: any) => ({
+          id: record.hash,
+          type: record.memo_type === 'text' && record.memo.includes('split') ? 'pockets' : 'direct',
+          amount: 0, // Horizon doesn't show amount in top-level tx, would need effects
+          asset: 'XLM',
+          timestamp: new Date(record.created_at).getTime(),
+          status: record.successful ? 'completed' : 'failed',
+          fee: parseFloat(record.fee_charged) / 10000000,
+          anchor: 'Stellar Network'
+        }));
+
+        // Merge and deduplicate by hash/id
+        const seen = new Set();
+        const merged = [...localHistory, ...blockchainTxs].filter(tx => {
+          const duplicate = seen.has(tx.id);
+          seen.add(tx.id);
+          return !duplicate;
+        });
+
+        setTransactions(merged.sort((a, b) => b.timestamp - a.timestamp));
+      } catch (e) {
+        console.warn('Failed to fetch blockchain history, falling back to local', e);
+        setTransactions(localHistory);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadHistory();
   }, []);
 
   const filteredTransactions = transactions
