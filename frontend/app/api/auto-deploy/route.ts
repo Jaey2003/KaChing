@@ -10,7 +10,7 @@ export async function POST() {
     // 1. Define paths
     const rootDir = path.resolve(process.cwd(), '..');
     const contractsDir = path.join(rootDir, 'contracts');
-    const wasmPath = path.join(contractsDir, 'target/wasm32v1-none/release/ka_ching.wasm');
+    const wasmPath = path.join(rootDir, 'target/wasm32v1-none/release/ka_ching.wasm');
 
     console.log('--- Auto-Deploy Started ---');
 
