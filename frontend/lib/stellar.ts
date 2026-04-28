@@ -145,8 +145,7 @@ export async function processSplit(
   if (sendRes.status === 'ERROR') {
     throw new Error('Transaction submission failed: ' + JSON.stringify(sendRes));
   }
-  }
-
+  
   // Poll for result
   let result = await rpcServer.getTransaction(sendRes.hash);
   while (result.status === 'NOT_FOUND') {
