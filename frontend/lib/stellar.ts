@@ -89,7 +89,7 @@ export async function processSplit(
   const pocketScVals = pockets.map(p => xdr.ScVal.scvMap([
     new xdr.ScMapEntry({
       key: xdr.ScVal.scvSymbol('name'),
-      val: xdr.ScVal.scvString(p.name)
+      val: xdr.ScVal.scvSymbol(p.name.toLowerCase())
     }),
     new xdr.ScMapEntry({
       key: xdr.ScVal.scvSymbol('percentage'),
