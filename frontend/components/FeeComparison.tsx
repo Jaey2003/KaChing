@@ -44,7 +44,7 @@ export default function FeeComparison() {
     const params = new URLSearchParams(searchParams.toString());
     params.set('fee', bestQuote.feePct.toString());
     params.set('selectedAnchor', bestQuote.name);
-    router.push(`/dashboard?${params.toString()}`);
+    router.push(`/success?${params.toString()}`);
   };
 
   return (
