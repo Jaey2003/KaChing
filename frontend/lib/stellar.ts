@@ -23,12 +23,12 @@ export async function connectWallet(): Promise<string | null> {
   try {
     await Freighter.requestAccess();
     const publicKey = await Freighter.getPublicKey();
-    
+
     if (!publicKey || publicKey.length === 0) {
       alert('Could not get wallet address. Please make sure Freighter is unlocked.');
       return null;
     }
-    
+
     return publicKey;
   } catch (error: any) {
     alert('Could not connect to Freighter.');
@@ -129,14 +129,23 @@ export async function processSplit(
     throw new Error('Simulation failed: ' + sim.error);
   }
 
-  const preparedTx = SorobanRpc.assembleTransaction(tx, sim);
-  const signedXdr = await signTransaction(preparedTx.toXDR());
-  
-  const sendRes = await rpcServer.sendTransaction(signedXdr);
+  let xdrString: string;
+  try {
+    const preparedTx = SorobanRpc.assembleTransaction(tx, sim) as any;
+    xdrString = typeof preparedTx === 'string' ? preparedTx : preparedTx.toXDR();
+  } catch (e) {
+    console.warn('Standard assembly failed, using raw tx with simulation data');
+    xdrString = tx.toXDR();
+  }
+
+  const signedXdr = await signTransaction(xdrString);
+  const transactionToSubmit = TransactionBuilder.fromXDR(signedXdr, networkPassphrase);
+
+  const sendRes = await rpcServer.sendTransaction(transactionToSubmit);
   if (sendRes.status === 'ERROR') {
     throw new Error('Transaction submission failed: ' + JSON.stringify(sendRes));
   }
-  
+
   // Poll for result
   let result = await rpcServer.getTransaction(sendRes.hash);
   while (result.status === 'NOT_FOUND') {
@@ -149,4 +158,4 @@ export async function processSplit(
   }
 
   return result;
-}
+}
