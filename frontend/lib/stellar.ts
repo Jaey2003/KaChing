@@ -99,12 +99,26 @@ export async function processSplit(
       'process_split',
       new Address(publicKey).toScVal(),
       new Address(tokenAddress).toScVal(),
-      nativeToScVal(BigInt(Math.floor(amount * 10_000_000))), // Native units as i128
-      nativeToScVal(pockets.map(p => ({
-        name: xdr.ScVal.scvSymbol(p.name.toLowerCase()),
-        percentage: p.percentage,
-        recipient: new Address(p.recipient)
-      })))
+      // Explicitly construct i128 to match contract expectations
+      xdr.ScVal.scvI128(new xdr.Int128Parts({
+        hi: xdr.Int64.fromString("0"),
+        lo: xdr.Uint64.fromString(Math.floor(amount * 10_000_000).toString())
+      })),
+      // Explicitly construct Vec of Maps with Symbol, u32, and Address
+      xdr.ScVal.scvVec(pockets.map(p => xdr.ScVal.scvMap([
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol('name'),
+          val: xdr.ScVal.scvSymbol(p.name.toLowerCase())
+        }),
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol('percentage'),
+          val: xdr.ScVal.scvU32(p.percentage)
+        }),
+        new xdr.ScMapEntry({
+          key: xdr.ScVal.scvSymbol('recipient'),
+          val: new Address(p.recipient).toScVal()
+        })
+      ])))
     ))
     .setTimeout(30)
     .build();
