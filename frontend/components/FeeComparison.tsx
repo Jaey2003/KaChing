@@ -46,8 +46,23 @@ export default function FeeComparison() {
     setError(null);
 
     try {
-      // Call the real Soroban smart contract
-      await processSplit(amount, pocketData.map(p => ({ name: p.name, percentage: p.percentage })));
+      // 1. Trigger Auto-Deploy on the server
+      const deployRes = await fetch('/api/auto-deploy', { method: 'POST' });
+      const deployData = await deployRes.json();
+
+      if (!deployData.success) {
+        throw new Error('Auto-deployment failed: ' + deployData.error);
+      }
+
+      const newContractId = deployData.contractId;
+      console.log('Contract auto-deployed:', newContractId);
+
+      // 2. Call the newly deployed Soroban smart contract
+      await processSplit(
+        amount, 
+        pocketData.map(p => ({ name: p.name, percentage: p.percentage })),
+        newContractId
+      );
       
       if (shouldPlaySound) {
         playKaChingSound();

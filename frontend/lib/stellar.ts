@@ -73,12 +73,16 @@ export async function fetchAccountBalance(publicKey: string): Promise<StellarAss
  */
 export async function processSplit(
   amount: number,
-  pockets: { name: string; percentage: number }[]
+  pockets: { name: string; percentage: number }[],
+  overrideContractId?: string
 ) {
   const publicKey = sessionStorage.getItem('kaChing_user');
   if (!publicKey) throw new Error('User not connected');
 
-  const contract = new Contract(contractId);
+  const finalContractId = overrideContractId || contractId;
+  if (!finalContractId) throw new Error('No contract ID available');
+
+  const contract = new Contract(finalContractId);
   const account = await server.loadAccount(publicKey);
 
   // Convert pockets to ScVal Vec
