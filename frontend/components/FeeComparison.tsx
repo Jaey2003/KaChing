@@ -49,6 +49,49 @@ export default function FeeComparison() {
 
   return (
     <div className="space-y-6">
+      {/* Anchor Options - NOW AT THE TOP */}
+      <div className="space-y-3">
+        <p className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Provider Quotes</p>
+        <div className="space-y-3">
+          {quotes.map((quote, idx) => (
+            <button
+              key={quote.id}
+              className={`w-full p-4 rounded-2xl border text-left transition-all relative overflow-hidden group ${
+                idx === 0 
+                  ? 'border-primary bg-primary/5 shadow-lg shadow-primary/5' 
+                  : 'border-white/5 bg-white/5 hover:border-white/20'
+              }`}
+            >
+              {idx === 0 && (
+                <div className="absolute top-0 right-0 bg-primary px-2 py-1 rounded-bl-lg">
+                  <span className="text-[10px] font-black text-dark uppercase tracking-tighter">Best Value</span>
+                </div>
+              )}
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="font-bold text-white flex items-center gap-2">
+                    {quote.name}
+                    {idx === 0 && <Check size={14} className="text-primary" />}
+                  </h3>
+                  <div className="flex items-center gap-3 mt-1">
+                    <span className="text-[10px] font-medium text-gray-400 flex items-center gap-1">
+                      <Clock size={10} /> {quote.eta}m
+                    </span>
+                    <span className="text-[10px] font-medium text-gray-400">
+                      Fee: {quote.feePct}%
+                    </span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-bold text-white">${quote.totalCost.toFixed(2)}</p>
+                  <p className="text-[10px] text-gray-500 font-medium">Est. Final Cost</p>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-xl font-bold">Transfer Summary</h2>
         <div className="px-3 py-1 bg-primary/10 border border-primary/20 rounded-full flex items-center gap-2">
@@ -120,49 +163,6 @@ export default function FeeComparison() {
         </div>
       )}
 
-      {/* Anchor Options */}
-      <div className="space-y-3">
-        <p className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Provider Quotes</p>
-        <div className="space-y-3">
-          {quotes.map((quote, idx) => (
-            <button
-              key={quote.id}
-              className={`w-full p-4 rounded-2xl border text-left transition-all relative overflow-hidden group ${
-                idx === 0 
-                  ? 'border-primary bg-primary/5 shadow-lg shadow-primary/5' 
-                  : 'border-white/5 bg-white/5 hover:border-white/20'
-              }`}
-            >
-              {idx === 0 && (
-                <div className="absolute top-0 right-0 bg-primary px-2 py-1 rounded-bl-lg">
-                  <span className="text-[10px] font-black text-dark uppercase tracking-tighter">Best Value</span>
-                </div>
-              )}
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="font-bold text-white flex items-center gap-2">
-                    {quote.name}
-                    {idx === 0 && <Check size={14} className="text-primary" />}
-                  </h3>
-                  <div className="flex items-center gap-3 mt-1">
-                    <span className="text-[10px] font-medium text-gray-400 flex items-center gap-1">
-                      <Clock size={10} /> {quote.eta}m
-                    </span>
-                    <span className="text-[10px] font-medium text-gray-400">
-                      Fee: {quote.feePct}%
-                    </span>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-bold text-white">${quote.totalCost.toFixed(2)}</p>
-                  <p className="text-[10px] text-gray-500 font-medium">Est. Final Cost</p>
-                </div>
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
-
       {shouldPlaySound && (
         <motion.div 
           initial={{ scale: 0.95, opacity: 0 }}
@@ -188,4 +188,5 @@ export default function FeeComparison() {
     </div>
   );
 }
+
 
