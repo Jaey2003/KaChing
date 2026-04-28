@@ -1,0 +1,88 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { fetchAccountBalance, StellarAsset } from '@/lib/stellar';
+import PocketCard from './PocketCard';
+import { CreditCard } from 'lucide-react';
+
+export default function Dashboard() {
+  const [balances, setBalances] = useState<StellarAsset[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const publicKey = sessionStorage.getItem('kaChing_user');
+    if (publicKey) {
+      fetchAccountBalance(publicKey).then((res) => {
+        setBalances(res);
+        setLoading(false);
+      });
+    }
+  }, []);
+
+  // Determine XLM balance specifically for the conversion display
+  const xlmBalance = balances.find(b => b.code === 'XLM')?.balance || '0';
+  
+  // Logic to determine which asset to showcase in the main card:
+  // 1. Prefer USDC if available
+  // 2. Otherwise pick the first non-XLM asset
+  // 3. Fallback to XLM if it's the only asset
+  const primaryAsset = 
+    balances.find(b => b.code === 'USDC') || 
+    balances.find(b => b.code !== 'XLM') || 
+    balances.find(b => b.code === 'XLM');
+
+  const pockets = [
+    { name: 'tuition', balance: 450.00, goal: 1000, color: 'bg-blue-500/20 text-blue-400' },
+    { name: 'savings', balance: 120.50, goal: 500, color: 'bg-emerald-500/20 text-emerald-400' },
+    { name: 'medical', balance: 85.00, goal: 200, color: 'bg-rose-500/20 text-rose-400' },
+  ];
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 animate-pulse">
+        <div className="w-16 h-16 bg-surface rounded-full mb-4"></div>
+        <div className="h-4 w-32 bg-surface rounded mb-2"></div>
+        <div className="h-3 w-24 bg-surface rounded"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-8 pb-24">
+      {/* Header Balance Card */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary to-primary/80 p-8 rounded-3xl text-dark shadow-2xl shadow-primary/20">
+        <div className="relative z-10">
+          <p className="text-sm font-bold opacity-70 uppercase tracking-widest mb-1">Total Balance</p>
+          <div className="flex items-baseline gap-2">
+            <span className="text-4xl font-extrabold tracking-tight">
+              {primaryAsset ? parseFloat(primaryAsset.balance).toLocaleString(undefined, { minimumFractionDigits: 2 }) : '0.00'}
+            </span>
+            <span className="text-lg font-bold opacity-80">{primaryAsset?.code || 'USDC'}</span>
+          </div>
+          {/* Only show XLM sub-balance if XLM is not the primary showcased asset */}
+          {primaryAsset && primaryAsset.code !== 'XLM' && (
+            <p className="text-sm font-medium opacity-60 mt-2">
+              ≈ {parseFloat(xlmBalance).toFixed(2)} XLM
+            </p>
+          )}
+        </div>
+        <div className="absolute top-0 right-0 p-8 opacity-20">
+          <CreditCard size={120} strokeWidth={1} />
+        </div>
+      </div>
+
+      {/* Pockets Section */}
+      <div className="space-y-4">
+        <div className="flex justify-between items-center px-1">
+          <h2 className="text-lg font-bold text-white tracking-tight">Financial Pockets</h2>
+          <button className="text-primary text-xs font-bold hover:underline">Manage All</button>
+        </div>
+        <div className="grid gap-4">
+          {pockets.map((pocket) => (
+            <PocketCard key={pocket.name} {...pocket} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
