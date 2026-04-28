@@ -76,6 +76,7 @@ The KaChing Smart Contract is built with Rust and optimized for the Soroban runt
 
 <div align="center">
   <img src="media/smart-contract.png" alt="Smart Contract Architecture" width="100%" />
+  <p><a href="https://stellar.expert/explorer/testnet/tx/5746131d5b30e2ddb6732545706439b82c43fe9c33400ae6bdb35f8f19be89eb" target="_blank">View Verified Execution on Stellar Expert</a></p>
 </div>
 
 ### 🔄 Contract Function Flow
