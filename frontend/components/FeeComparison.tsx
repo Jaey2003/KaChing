@@ -49,18 +49,25 @@ export default function FeeComparison() {
     const userAddress = sessionStorage.getItem('kaChing_user') || '';
 
     try {
-      // 1. Trigger Auto-Deploy on the server
-      const deployRes = await fetch('/api/auto-deploy', { method: 'POST' });
-      const deployData = await deployRes.json();
+      let activeContractId = process.env.NEXT_PUBLIC_CONTRACT_ID;
 
-      if (!deployData.success) {
-        throw new Error('Auto-deployment failed: ' + deployData.error);
+      // 1. Only Trigger Auto-Deploy if the contract ID is missing or a placeholder
+      if (!activeContractId || activeContractId.startsWith('CAAAA')) {
+        console.log('No valid contract ID found. Triggering auto-deploy...');
+        const deployRes = await fetch('/api/auto-deploy', { method: 'POST' });
+        const deployData = await deployRes.json();
+
+        if (!deployData.success) {
+          throw new Error('Auto-deployment failed: ' + deployData.error);
+        }
+
+        activeContractId = deployData.contractId;
+        console.log('Contract auto-deployed:', activeContractId);
+      } else {
+        console.log('Using persistent contract ID:', activeContractId);
       }
 
-      const newContractId = deployData.contractId;
-      console.log('Contract auto-deployed:', newContractId);
-
-      // 2. Call the newly deployed Soroban smart contract
+      // 2. Call the Soroban smart contract
       // Map pockets to include the recipient address
       const formattedPockets = pocketData.map(p => ({
         name: p.name,
@@ -74,7 +81,7 @@ export default function FeeComparison() {
         amount, 
         formattedPockets,
         asset,
-        newContractId
+        activeContractId
       );
       
       // Save to history

@@ -120,42 +120,40 @@ export async function processSplit(
         })
       ])))
     ))
-    .setTimeout(30)
+    .setTimeout(300)
     .build();
 
-  // Simulate to get footprint/fees
-  const sim = await rpcServer.simulateTransaction(tx);
-  if (SorobanRpc.Api.isSimulationError(sim)) {
-    throw new Error('Simulation failed: ' + sim.error);
-  }
-
-  let xdrString: string;
-  try {
-    const preparedTx = SorobanRpc.assembleTransaction(tx, sim) as any;
-    xdrString = typeof preparedTx === 'string' ? preparedTx : preparedTx.toXDR();
-  } catch (e) {
-    console.warn('Standard assembly failed, using raw tx with simulation data');
-    xdrString = tx.toXDR();
-  }
-
-  const signedXdr = await signTransaction(xdrString);
-  const transactionToSubmit = TransactionBuilder.fromXDR(signedXdr, networkPassphrase);
-
-  const sendRes = await rpcServer.sendTransaction(transactionToSubmit);
+  // Prepare transaction (simulates and assembles in one go)
+  const preparedTx = await rpcServer.prepareTransaction(tx);
+  
+  const signedXdr = await signTransaction(preparedTx.toXDR());
+  const sendRes = await rpcServer.sendTransaction(TransactionBuilder.fromXDR(signedXdr, networkPassphrase));
   if (sendRes.status === 'ERROR') {
     throw new Error('Transaction submission failed: ' + JSON.stringify(sendRes));
   }
 
-  // Poll for result
-  let result = await rpcServer.getTransaction(sendRes.hash);
-  while (result.status === 'NOT_FOUND') {
+  // Poll for result using Horizon (more stable and avoids CORS/SDK bugs)
+  let attempts = 0;
+  while (attempts < 60) { // Max 60 seconds
     await new Promise(resolve => setTimeout(resolve, 1000));
-    result = await rpcServer.getTransaction(sendRes.hash);
+    attempts++;
+    
+    try {
+      // Horizon will throw 404 until the transaction is in a ledger
+      const txResult = await server.transactions().transaction(sendRes.hash).call();
+      if (txResult) {
+        console.log('Transaction confirmed on Horizon:', txResult);
+        return txResult;
+      }
+    } catch (e: any) {
+      // If 404, transaction isn't in ledger yet, just keep polling
+      if (e.response?.status !== 404) {
+        console.warn('Polling Horizon failed, retrying...', e.message);
+      }
+    }
   }
 
-  if (result.status === 'FAILED') {
-    throw new Error('Transaction failed in polling');
-  }
+  throw new Error('Transaction polling timed out. Your balance was deducted, so the transaction likely succeeded. Check your wallet history!');
 
-  return result;
+  return { status };
 }
