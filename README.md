@@ -1,6 +1,12 @@
 # 🪙 KaChing
 *Hear the savings. Split with purpose.* – A fee-optimized remittance router with auto-budgeting pockets for families, powered by **Stellar Soroban**.
 
+## 🎬 Demo
+<div align="center">
+  <video src="media/demo.mp4" width="100%" controls></video>
+  <p><i>If the video doesn't load, you can find it in the <code>/media</code> folder.</i></p>
+</div>
+
 ## 🎯 Problem & Solution
 **Problem:** Philippine remittances hit $35.63B in 2025, yet 43% of senders cite hidden fees as their top frustration. The PH Senate's OFW Remittance Protection Act warns that "such costs diminish OFW income" and mandates transparency. Families receiving irregular inflows struggle to allocate funds toward tuition, medical, and savings, causing cash leakage.
 
@@ -52,6 +58,37 @@ The core contract (`contracts/src/lib.rs`) manages the `process_split` function:
 2. Validates that the total percentage equals 100%.
 3. Calculates the exact amount for each recipient based on the percentage.
 4. Executes multiple transfers in a single atomic transaction.
+
+## 📜 Smart Contract Deployment
+The KaChing core logic is handled by a Soroban smart contract. There are two ways to deploy it:
+
+### 1. Automated Deployment (Development)
+The project includes a custom auto-deployment system designed for rapid development.
+- **Endpoint**: `POST /api/auto-deploy`
+- **Logic**: When triggered, the server automatically recompiles the Rust contract, deploys it to the Testnet using the `dev` identity, and returns the new `Contract ID`.
+- **Integration**: The frontend is configured to automatically trigger this if no persistent `NEXT_PUBLIC_CONTRACT_ID` is found in the environment.
+
+### 2. Manual Deployment (Production)
+For production or manual testing, use the following Soroban CLI commands:
+
+#### Build the contract:
+```bash
+soroban contract build
+```
+
+#### Deploy to Testnet:
+```bash
+soroban contract deploy \
+  --wasm target/wasm32-unknown-unknown/release/ka_ching.wasm \
+  --source dev \
+  --network testnet
+```
+
+#### Important Configuration:
+After deployment, update your `.env.local` file with the generated Contract ID:
+```env
+NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
+```
 
 ## 🌌 Stellar Features Leveraged
 - **Soroban Smart Contracts**: Programmatic distribution of funds.
