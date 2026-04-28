@@ -85,8 +85,8 @@ export async function processSplit(
 
   // Testnet Token Contract IDs
   const TOKEN_ADDRESSES: Record<string, string> = {
-    'XLM': 'CDLZFC3SYJYDZT7K67VZ75YJ36A2CHYRE6477KIP6Y6NLR6YJMTMGNRZ', // Native XLM Contract
-    'USDC': 'GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5' // Example USDC
+    'XLM': 'CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC', // Official Testnet Native XLM Contract
+    'USDC': 'CCW67Z6S5QYOKU62XNQT2Y2K7XPFIDY7P3HL66T5IJRPHX6V6Z7K7YVQ' // Placeholder: Replace with actual USDC Contract ID if available
   };
 
   const tokenAddress = TOKEN_ADDRESSES[assetCode.toUpperCase()] || TOKEN_ADDRESSES['XLM'];
