@@ -41,6 +41,16 @@
 - **Stellar Freighter Wallet**: Installed as a browser extension and set to **Testnet**.
 
 ### 2. Setup
+
+#### **Smart Contract Setup:**
+```bash
+# Build the contract
+soroban contract build
+
+# This will generate: target/wasm32-unknown-unknown/release/ka_ching.wasm
+```
+
+#### **Frontend Setup:**
 ```bash
 # Install frontend dependencies
 cd frontend
