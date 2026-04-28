@@ -129,24 +129,22 @@ export async function processSplit(
     throw new Error('Simulation failed: ' + sim.error);
   }
 
-  const preparedTx = SorobanRpc.assembleTransaction(tx, sim) as any;
   let xdrString: string;
-  
-  if (typeof preparedTx === 'string') {
-    xdrString = preparedTx;
-  } else if (preparedTx && typeof preparedTx.toXDR === 'function') {
-    xdrString = preparedTx.toXDR();
-  } else {
-    // Fallback: if assembleTransaction returns something else, try to get XDR from original tx
-    console.warn('assembleTransaction returned an unexpected type. Falling back to original tx XDR.');
+  try {
+    const preparedTx = SorobanRpc.assembleTransaction(tx, sim) as any;
+    xdrString = typeof preparedTx === 'string' ? preparedTx : preparedTx.toXDR();
+  } catch (e) {
+    console.warn('Standard assembly failed, using raw tx with simulation data');
     xdrString = tx.toXDR();
   }
   
   const signedXdr = await signTransaction(xdrString);
+  const transactionToSubmit = TransactionBuilder.fromXDR(signedXdr, networkPassphrase);
   
-  const sendRes = await rpcServer.sendTransaction(TransactionBuilder.fromXDR(signedXdr, networkPassphrase));
+  const sendRes = await rpcServer.sendTransaction(transactionToSubmit);
   if (sendRes.status === 'ERROR') {
-    throw new Error('Transaction failed: ' + JSON.stringify(sendRes.errorResultXdr));
+    throw new Error('Transaction submission failed: ' + JSON.stringify(sendRes));
+  }
   }
 
   // Poll for result
