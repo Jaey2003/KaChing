@@ -36,6 +36,8 @@ export default function SuccessPage() {
     }
   });
 
+  const hash = searchParams.get('hash') || '';
+
   return (
     <main className="min-h-screen bg-dark text-white p-6 pb-32">
       <div className="max-w-md mx-auto pt-10 space-y-8">
@@ -121,10 +123,21 @@ export default function SuccessPage() {
             </div>
           </div>
           
-          {/* Bottom Badge */}
-          <div className="bg-white/5 p-3 text-center">
-            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-tighter">Transaction Hash: {Math.random().toString(36).substring(2, 15).toUpperCase()}...</p>
-          </div>
+          {/* Bottom Badge - Explorer Link */}
+          {hash && (
+            <a 
+              href={`https://stellar.expert/explorer/testnet/tx/${hash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white/5 p-4 text-center border-t border-white/5 hover:bg-white/10 transition-all flex items-center justify-center gap-2 group"
+            >
+              <div className="flex-1 overflow-hidden">
+                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest group-hover:text-primary transition-colors">View on Explorer</p>
+                <p className="text-[10px] text-gray-400 font-mono truncate px-4">{hash}</p>
+              </div>
+              <ArrowRight size={14} className="text-gray-500 group-hover:text-primary -rotate-45" />
+            </a>
+          )}
         </motion.div>
 
         {/* Action Buttons */}

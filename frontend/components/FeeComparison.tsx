@@ -77,7 +77,7 @@ export default function FeeComparison() {
         recipient: mode === 'direct' ? recipient : userAddress
       }));
 
-      await processSplit(
+      const result = await processSplit(
         amount, 
         formattedPockets,
         asset,
@@ -103,6 +103,9 @@ export default function FeeComparison() {
       const params = new URLSearchParams(searchParams.toString());
       params.set('fee', bestQuote.feePct.toString());
       params.set('selectedAnchor', bestQuote.name);
+      if ((result as any).hash) {
+        params.set('hash', (result as any).hash);
+      }
       router.push(`/success?${params.toString()}`);
     } catch (err: any) {
       console.error(err);
