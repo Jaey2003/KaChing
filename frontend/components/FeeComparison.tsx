@@ -12,6 +12,7 @@ export default function FeeComparison() {
   const amount = parseFloat(searchParams.get('amount') || '0');
   const asset = searchParams.get('asset') || 'USDC';
   const mode = searchParams.get('mode') || 'pockets';
+  const recipient = searchParams.get('recipient') || '';
   
   const quotes = mockAnchorQuotes(amount);
   const bestQuote = quotes[0];
@@ -19,9 +20,9 @@ export default function FeeComparison() {
   const savings = avgFee - bestQuote.totalFee;
   const shouldPlaySound = savings > 0;
 
-  // Extract all pockets from search params (anything that isn't amount, asset, or mode)
+  // Extract all pockets from search params (anything that isn't amount, asset, mode, or recipient)
   const pocketData: { name: string; percentage: number; amount: number }[] = [];
-  const excludedKeys = ['amount', 'asset', 'mode'];
+  const excludedKeys = ['amount', 'asset', 'mode', 'recipient'];
   
   searchParams.forEach((value, key) => {
     if (!excludedKeys.includes(key)) {
@@ -40,7 +41,6 @@ export default function FeeComparison() {
     if (shouldPlaySound) {
       playKaChingSound();
     }
-    // Forward all current params to dashboard
     const params = new URLSearchParams(searchParams.toString());
     params.set('fee', bestQuote.feePct.toString());
     params.set('selectedAnchor', bestQuote.name);
@@ -68,37 +68,57 @@ export default function FeeComparison() {
           <span className="font-medium text-rose-400">-{bestQuote.totalFee.toFixed(2)} {asset}</span>
         </div>
         <div className="pt-3 border-t border-white/5 flex justify-between items-center">
-          <span className="text-sm font-bold text-white">Net to Pockets</span>
+          <span className="text-sm font-bold text-white">
+            {mode === 'direct' ? 'Amount to Recipient' : 'Net to Pockets'}
+          </span>
           <span className="text-lg font-black text-primary">{(amount - bestQuote.totalFee).toFixed(2)} {asset}</span>
         </div>
       </div>
 
-      {/* Pockets Breakdown */}
-      <div className="space-y-3">
-        <p className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Allocations</p>
-        <div className="grid gap-2">
-          {pocketData.map((pocket, idx) => (
-            <motion.div 
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: idx * 0.1 }}
-              key={pocket.name} 
-              className="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/5"
-            >
-              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
-                {pocket.percentage}%
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-bold text-white">{pocket.name}</p>
-              </div>
-              <div className="text-right">
-                <p className="text-sm font-bold text-primary">{pocket.amount.toFixed(2)}</p>
-                <p className="text-[10px] text-gray-500 uppercase font-medium">{asset}</p>
-              </div>
-            </motion.div>
-          ))}
+      {/* Recipient Display (Direct Mode) */}
+      {mode === 'direct' && recipient && (
+        <div className="space-y-3">
+          <p className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Recipient</p>
+          <div className="bg-white/5 p-4 rounded-xl border border-white/5 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+              <Wallet size={20} />
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <p className="text-xs text-gray-400 mb-0.5 uppercase font-bold tracking-tighter">Stellar Address</p>
+              <p className="text-sm text-white font-mono truncate">{recipient}</p>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Pockets Breakdown (Pockets Mode) */}
+      {mode === 'pockets' && pocketData.length > 0 && (
+        <div className="space-y-3">
+          <p className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Allocations</p>
+          <div className="grid gap-2">
+            {pocketData.map((pocket, idx) => (
+              <motion.div 
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.1 }}
+                key={pocket.name} 
+                className="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/5"
+              >
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
+                  {pocket.percentage}%
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-white">{pocket.name}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-bold text-primary">{pocket.amount.toFixed(2)}</p>
+                  <p className="text-[10px] text-gray-500 uppercase font-medium">{asset}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Anchor Options */}
       <div className="space-y-3">
@@ -107,7 +127,6 @@ export default function FeeComparison() {
           {quotes.map((quote, idx) => (
             <button
               key={quote.id}
-              onClick={() => {}} // In a real app, this would select the quote
               className={`w-full p-4 rounded-2xl border text-left transition-all relative overflow-hidden group ${
                 idx === 0 
                   ? 'border-primary bg-primary/5 shadow-lg shadow-primary/5' 
@@ -164,8 +183,9 @@ export default function FeeComparison() {
         onClick={handleSelect}
         className="w-full py-4 bg-primary text-dark font-black rounded-2xl flex items-center justify-center gap-3 hover:opacity-90 active:scale-[0.98] transition-all shadow-xl shadow-primary/20"
       >
-        Confirm & Execute Split <ArrowRight size={20} />
+        {mode === 'direct' ? 'Confirm & Send Money' : 'Confirm & Execute Split'} <ArrowRight size={20} />
       </button>
     </div>
   );
-}
+}
+

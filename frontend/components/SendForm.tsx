@@ -65,7 +65,7 @@ export default function SendForm({ mode, onBack }: SendFormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    let queryParams = `amount=${amount}&asset=${selectedAsset}&mode=${mode}`;
+    let queryParams = `amount=${amount}&asset=${selectedAsset}&mode=${mode}&recipient=${recipient}`;
     
     if (mode === 'pockets') {
       if (totalPercentage !== 100) {
