@@ -10,7 +10,11 @@ declare global {
 const networkPassphrase = Networks.TESTNET;
 const horizonUrl = process.env.NEXT_PUBLIC_HORIZON_URL || 'https://horizon-testnet.stellar.org';
 const rpcUrl = 'https://soroban-testnet.stellar.org';
-const contractId = process.env.NEXT_PUBLIC_CONTRACT_ID || 'CD3LA6RKF5D2FN2R2L57MWXLBRSEWWENE74YBEFZSSGNJRJGICFGQXMX';
+const contractId = process.env.NEXT_PUBLIC_CONTRACT_ID;
+
+if (!contractId) {
+  console.warn('NEXT_PUBLIC_CONTRACT_ID is not set in environment variables. Contract interactions will fail.');
+}
 
 export const server = new Horizon.Server(horizonUrl, { allowHttp: true });
 export const rpcServer = new SorobanRpc.Server(rpcUrl, { allowHttp: true });
