@@ -90,7 +90,7 @@ export default function FeeComparison() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-bold text-white">${quote.totalCost.toFixed(2)}</p>
+                  <p className="text-sm font-bold text-white">{quote.totalCost.toFixed(2)} {asset}</p>
                   <p className="text-[10px] text-gray-500 font-medium">Est. Final Cost</p>
                 </div>
               </div>
