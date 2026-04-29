@@ -69,6 +69,13 @@ export default function WalletView() {
           {copied && <p className="text-[10px] text-primary mt-1 font-bold ml-1">Address copied!</p>}
         </div>
 
+        <button 
+          onClick={disconnect}
+          className="w-full flex items-center justify-center gap-2 py-3 bg-primary text-dark rounded-xl text-xs font-black shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+        >
+          <RefreshCw size={14} /> CHANGE WALLET
+        </button>
+
         <div className="grid grid-cols-2 gap-3">
           <a 
             href={`https://stellar.expert/explorer/testnet/account/${address}`}
