@@ -70,7 +70,21 @@ export function saveUsage(record: Omit<UsageRecord, 'id' | 'timestamp'>) {
   };
 
   const updatedHistory = [newRecord, ...history];
-  localStorage.setItem(USAGE_KEY, JSON.stringify(updatedHistory.slice(0, 100)));
+  const payload = JSON.stringify(updatedHistory.slice(0, 100));
+
+  try {
+    localStorage.setItem(USAGE_KEY, payload);
+  } catch (err: any) {
+    if (err.name === 'QuotaExceededError' || err.code === 22) {
+      // Drop the base64 image and retry
+      console.warn('localStorage full; saving without image evidence');
+      newRecord.evidence = null;
+      const fallbackPayload = JSON.stringify([newRecord, ...history].slice(0, 100));
+      localStorage.setItem(USAGE_KEY, fallbackPayload);
+    } else {
+      throw err;
+    }
+  }
   return newRecord;
 }
 
