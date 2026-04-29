@@ -10,6 +10,7 @@ import { getTransactions } from '@/lib/history';
 export default function Dashboard() {
   const [balances, setBalances] = useState<StellarAsset[]>([]);
   const [loading, setLoading] = useState(true);
+  const [pocketStats, setPocketStats] = useState<{name: string, balance: number, goal: number, color: string}[]>([]);
 
   useEffect(() => {
     const publicKey = sessionStorage.getItem('kaChing_user');
@@ -19,6 +20,41 @@ export default function Dashboard() {
         setLoading(false);
       });
     }
+
+    // Sync Pockets from History
+    const history = getTransactions();
+    const pocketBalances: Record<string, number> = {};
+    const defaultPockets = ['tuition', 'savings', 'medical'];
+    defaultPockets.forEach(p => pocketBalances[p] = 0);
+
+    history.forEach(tx => {
+      if (tx.type === 'pockets' && tx.status === 'completed' && tx.pockets) {
+        tx.pockets.forEach(p => {
+          const name = p.name.toLowerCase();
+          if (pocketBalances[name] !== undefined) {
+            pocketBalances[name] += p.amount;
+          } else {
+            pocketBalances[name] = p.amount;
+          }
+        });
+      }
+    });
+
+    const colors = [
+      'bg-blue-500/20 text-blue-400',
+      'bg-emerald-500/20 text-emerald-400',
+      'bg-rose-500/20 text-rose-400',
+      'bg-amber-500/20 text-amber-400',
+    ];
+
+    const dynamicPockets = Object.keys(pocketBalances).map((name, idx) => ({
+      name,
+      balance: pocketBalances[name],
+      goal: name === 'tuition' ? 1000 : name === 'savings' ? 500 : name === 'medical' ? 200 : 1000,
+      color: colors[idx % colors.length]
+    })).slice(0, 3); // Only show top 3 on dashboard
+
+    setPocketStats(dynamicPockets);
   }, []);
 
   // Determine XLM balance specifically for the conversion display
@@ -27,12 +63,6 @@ export default function Dashboard() {
     balances.find(b => b.code === 'USDC') || 
     balances.find(b => b.code !== 'XLM') || 
     balances.find(b => b.code === 'XLM');
-
-  const pockets = [
-    { name: 'tuition', balance: 450.00, goal: 1000, color: 'bg-blue-500/20 text-blue-400' },
-    { name: 'savings', balance: 120.50, goal: 500, color: 'bg-emerald-500/20 text-emerald-400' },
-    { name: 'medical', balance: 85.00, goal: 200, color: 'bg-rose-500/20 text-rose-400' },
-  ];
 
   if (loading) {
     return (
@@ -81,7 +111,7 @@ export default function Dashboard() {
           </button>
         </div>
         <div className="grid gap-4">
-          {pockets.map((pocket) => (
+          {pocketStats.map((pocket) => (
             <PocketCard key={pocket.name} {...pocket} />
           ))}
         </div>
