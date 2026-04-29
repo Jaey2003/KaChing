@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { GraduationCap, PiggyBank, Heart, Plane, Coins, Wallet } from 'lucide-react';
 
 const icons = {
@@ -21,7 +22,19 @@ interface PocketCardProps {
 }
 
 export default function PocketCard({ name, balance, goal, color, asset = 'XLM', actionLabel = 'Use it' }: PocketCardProps) {
+  const router = useRouter();
   const progress = Math.min((balance / goal) * 100, 100);
+
+  const handleUseIt = () => {
+    if (actionLabel === 'Use it') {
+      const params = new URLSearchParams();
+      params.set('name', name);
+      params.set('balance', balance.toString());
+      params.set('asset', asset);
+      params.set('color', color);
+      router.push(`/use-pocket?${params.toString()}`);
+    }
+  };
 
   return (
     <motion.div 
@@ -51,7 +64,10 @@ export default function PocketCard({ name, balance, goal, color, asset = 'XLM', 
         />
       </div>
       
-      <button className="w-full py-2 border border-primary text-primary rounded-xl font-bold hover:bg-primary/10 transition-all active:scale-95">
+      <button
+        onClick={actionLabel === 'Use it' ? handleUseIt : undefined}
+        className="w-full py-2 border border-primary text-primary rounded-xl font-bold hover:bg-primary/10 transition-all active:scale-95"
+      >
         {actionLabel}
       </button>
     </motion.div>
