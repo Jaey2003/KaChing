@@ -6,21 +6,29 @@ import { PieChart } from 'lucide-react';
 import { getTransactions } from '@/lib/history';
 
 export default function PocketsView() {
-  const [pocketStats, setPocketStats] = useState<{name: string, balance: number, goal: number, color: string}[]>([]);
+  const [activeSubTab, setActiveSubTab] = useState<'my' | 'sent'>('my');
+  const [myPockets, setMyPockets] = useState<{name: string, balance: number, goal: number, color: string}[]>([]);
+  const [sentPockets, setSentPockets] = useState<{name: string, balance: number, goal: number, color: string}[]>([]);
 
   useEffect(() => {
+    const userAddress = sessionStorage.getItem('kaChing_user');
     const history = getTransactions();
-    const balances: Record<string, number> = {};
+    
+    const myBalances: Record<string, number> = {};
+    const sentBalances: Record<string, number> = {};
 
-    // Dynamically discover all pockets from successful transactions
     history.forEach(tx => {
       if (tx.type === 'pockets' && tx.status === 'completed' && tx.pockets) {
         tx.pockets.forEach(p => {
           const name = p.name.toLowerCase();
-          if (balances[name] !== undefined) {
-            balances[name] += p.amount;
+          // Logic: If recipient matches user address or is missing (self-send default), it's "My Pocket"
+          // In our SendForm/FeeComparison, we set the recipient.
+          const isMe = !p.recipient || p.recipient === userAddress;
+          
+          if (isMe) {
+            myBalances[name] = (myBalances[name] || 0) + p.amount;
           } else {
-            balances[name] = p.amount;
+            sentBalances[name] = (sentBalances[name] || 0) + p.amount;
           }
         });
       }
@@ -31,33 +39,56 @@ export default function PocketsView() {
       'bg-emerald-500/20 text-emerald-400',
       'bg-rose-500/20 text-rose-400',
       'bg-amber-500/20 text-amber-400',
-      'bg-purple-500/20 text-purple-400',
-      'bg-cyan-500/20 text-cyan-400'
     ];
 
-    const dynamicPockets = Object.keys(balances).map((name, idx) => ({
-      name,
-      balance: balances[name],
-      goal: 1000, // Default goal for dynamic pockets
-      color: colors[idx % colors.length]
-    }));
+    const formatPockets = (balances: Record<string, number>) => 
+      Object.keys(balances).map((name, idx) => ({
+        name,
+        balance: balances[name],
+        goal: 1000,
+        color: colors[idx % colors.length]
+      }));
 
-    setPocketStats(dynamicPockets);
+    setMyPockets(formatPockets(myBalances));
+    setSentPockets(formatPockets(sentBalances));
   }, []);
 
-  const totalBalance = pocketStats.reduce((acc, p) => acc + p.balance, 0);
+  const currentPockets = activeSubTab === 'my' ? myPockets : sentPockets;
+  const totalBalance = currentPockets.reduce((acc, p) => acc + p.balance, 0);
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-4">
         <h1 className="text-2xl font-bold flex items-center gap-2">
-          <PieChart className="text-primary" /> My Pockets
+          <PieChart className="text-primary" /> Pockets
         </h1>
+        
+        {/* Sub-tabs for My vs Sent */}
+        <div className="flex bg-white/5 p-1 rounded-2xl border border-white/5">
+          <button 
+            onClick={() => setActiveSubTab('my')}
+            className={`flex-1 py-2.5 rounded-xl text-xs font-black transition-all ${
+              activeSubTab === 'my' ? 'bg-primary text-dark shadow-lg shadow-primary/20' : 'text-gray-500 hover:text-white'
+            }`}
+          >
+            MY POCKETS
+          </button>
+          <button 
+            onClick={() => setActiveSubTab('sent')}
+            className={`flex-1 py-2.5 rounded-xl text-xs font-black transition-all ${
+              activeSubTab === 'sent' ? 'bg-primary text-dark shadow-lg shadow-primary/20' : 'text-gray-500 hover:text-white'
+            }`}
+          >
+            SENT POCKETS
+          </button>
+        </div>
       </div>
 
       {/* Summary Card */}
       <div className="glass p-6 rounded-3xl border border-white/5 bg-gradient-to-br from-white/5 to-transparent">
-        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Total Pocket Value</p>
+        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">
+          {activeSubTab === 'my' ? 'Total My Value' : 'Total Sent Value'}
+        </p>
         <div className="flex items-baseline gap-2">
           <span className="text-3xl font-black text-white">${totalBalance.toFixed(2)}</span>
           <span className="text-sm font-bold text-gray-500 uppercase">USD</span>
@@ -65,9 +96,15 @@ export default function PocketsView() {
       </div>
 
       <div className="grid gap-4">
-        {pocketStats.map((pocket) => (
-          <PocketCard key={pocket.name} {...pocket} />
-        ))}
+        {currentPockets.length > 0 ? (
+          currentPockets.map((pocket) => (
+            <PocketCard key={pocket.name} {...pocket} />
+          ))
+        ) : (
+          <div className="py-20 text-center glass rounded-3xl border border-dashed border-white/10">
+            <p className="text-sm text-gray-500">No {activeSubTab === 'my' ? 'received' : 'sent'} pockets found</p>
+          </div>
+        )}
       </div>
     </div>
   );
