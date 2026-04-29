@@ -9,6 +9,8 @@ import SendForm from '@/components/SendForm';
 import Dashboard from '@/components/Dashboard';
 import Activity from '@/components/Activity';
 import PocketsView from '@/components/PocketsView';
+import WalletView from '@/components/WalletView';
+import ProfileView from '@/components/ProfileView';
 import Navigation from '@/components/Navigation';
 
 export default function Home() {
@@ -139,16 +141,8 @@ export default function Home() {
             <Activity />
           </div>
         )}
-        {activeTab === 'wallet' && (
-          <div className="flex flex-col items-center justify-center py-20 text-gray-500">
-            <p>Wallet settings coming soon</p>
-          </div>
-        )}
-        {activeTab === 'profile' && (
-          <div className="flex flex-col items-center justify-center py-20 text-gray-500">
-            <p>Profile settings coming soon</p>
-          </div>
-        )}
+        {activeTab === 'wallet' && <WalletView />}
+        {activeTab === 'profile' && <ProfileView />}
       </div>
       <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
     </main>
