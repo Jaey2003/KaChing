@@ -21,20 +21,18 @@ export default function Dashboard() {
       });
     }
 
-    // Sync Pockets from History
+    // Sync Pockets from History (Only "My Pockets" - Received)
     const history = getTransactions();
     const pocketBalances: Record<string, number> = {};
-    const defaultPockets = ['tuition', 'savings', 'medical'];
-    defaultPockets.forEach(p => pocketBalances[p] = 0);
 
     history.forEach(tx => {
       if (tx.type === 'pockets' && tx.status === 'completed' && tx.pockets) {
         tx.pockets.forEach(p => {
           const name = p.name.toLowerCase();
-          if (pocketBalances[name] !== undefined) {
-            pocketBalances[name] += p.amount;
-          } else {
-            pocketBalances[name] = p.amount;
+          const isReceived = p.recipient === userAddress;
+          
+          if (isReceived) {
+            pocketBalances[name] = (pocketBalances[name] || 0) + p.amount;
           }
         });
       }
@@ -47,12 +45,15 @@ export default function Dashboard() {
       'bg-amber-500/20 text-amber-400',
     ];
 
-    const dynamicPockets = Object.keys(pocketBalances).map((name, idx) => ({
-      name,
-      balance: pocketBalances[name],
-      goal: name === 'tuition' ? 1000 : name === 'savings' ? 500 : name === 'medical' ? 200 : 1000,
-      color: colors[idx % colors.length]
-    })).slice(0, 3); // Only show top 3 on dashboard
+    // Only show pockets that actually have a balance
+    const dynamicPockets = Object.keys(pocketBalances)
+      .filter(name => pocketBalances[name] > 0)
+      .map((name, idx) => ({
+        name,
+        balance: pocketBalances[name],
+        goal: Math.max(pocketBalances[name], 1000), // Dynamic goal that is at least the balance
+        color: colors[idx % colors.length]
+      })).slice(0, 3);
 
     setPocketStats(dynamicPockets);
   }, []);
