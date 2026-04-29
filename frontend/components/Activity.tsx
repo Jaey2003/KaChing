@@ -53,6 +53,7 @@ export default function Activity({ limit, showTitle = true }: ActivityProps) {
             id: record.hash,
             type: record.memo_type === 'text' && record.memo.includes('split') ? 'pockets' : 'direct',
             direction: isSent ? 'sent' : 'received',
+            sender: record.source_account,
             amount: 0, // Amount needs careful parsing from operations, but for MVP we use a placeholder or tag
             asset: 'XLM',
             timestamp: new Date(record.created_at).getTime(),

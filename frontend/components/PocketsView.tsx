@@ -7,8 +7,8 @@ import { getTransactions } from '@/lib/history';
 
 export default function PocketsView() {
   const [activeSubTab, setActiveSubTab] = useState<'my' | 'sent'>('my');
-  const [myGroups, setMyGroups] = useState<{ id: string, asset: string, date: string, pockets: any[] }[]>([]);
-  const [sentGroups, setSentGroups] = useState<{ id: string, asset: string, date: string, pockets: any[] }[]>([]);
+  const [myGroups, setMyGroups] = useState<{ id: string, asset: string, sender?: string, date: string, pockets: any[] }[]>([]);
+  const [sentGroups, setSentGroups] = useState<{ id: string, asset: string, sender?: string, date: string, pockets: any[] }[]>([]);
 
   useEffect(() => {
     const userAddress = sessionStorage.getItem('kaChing_user');
@@ -42,12 +42,13 @@ export default function PocketsView() {
           myTemp.push({
             id: tx.id,
             asset: tx.asset,
+            sender: tx.sender || (isUserSender ? userAddress || undefined : 'External Sender'),
             date: new Date(tx.timestamp).toLocaleString(),
             pockets: relevantPocketsForMe.map((p, idx) => ({
               ...p,
               balance: p.amount,
               color: colors[idx % colors.length],
-              goal: p.amount, // Set goal to match balance so it shows as complete
+              goal: p.amount, 
               asset: tx.asset
             }))
           });
@@ -57,12 +58,13 @@ export default function PocketsView() {
           sentTemp.push({
             id: tx.id,
             asset: tx.asset,
+            sender: tx.sender || (isUserSender ? userAddress || undefined : undefined),
             date: new Date(tx.timestamp).toLocaleString(),
             pockets: relevantPocketsForSent.map((p, idx) => ({
               ...p,
               balance: p.amount,
               color: colors[idx % colors.length],
-              goal: p.amount, // Set goal to match balance so it shows as complete
+              goal: p.amount, 
               asset: tx.asset
             }))
           });
@@ -121,6 +123,13 @@ export default function PocketsView() {
                 <div className="h-[1px] flex-1 bg-white/5"></div>
                 <div className="flex flex-col items-center">
                   <span className="text-[9px] font-black text-primary uppercase tracking-[0.2em]">Transaction {group.id.substring(0, 8)}</span>
+                  {group.sender && (
+                    <span className="text-[8px] font-bold text-gray-500 mt-0.5">
+                      From: {group.sender.length > 20 ? 
+                        `${group.sender.substring(0, 6)}...${group.sender.substring(group.sender.length - 4)}` : 
+                        group.sender}
+                    </span>
+                  )}
                   <span className="text-[8px] font-bold text-gray-600">{group.date}</span>
                 </div>
                 <div className="h-[1px] flex-1 bg-white/5"></div>

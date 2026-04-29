@@ -90,6 +90,7 @@ export default function FeeComparison() {
         fee: bestQuote.feePct,
         anchor: bestQuote.name,
         recipient: formRecipient,
+        sender: userAddress || '',
         pockets: mode === 'pockets' ? formattedPockets.map((p, i) => ({
           ...pocketData[i],
           recipient: p.recipient

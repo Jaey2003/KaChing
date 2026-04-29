@@ -6,6 +6,7 @@ export interface Transaction {
   asset: string;
   timestamp: number;
   recipient?: string;
+  sender?: string;
   pockets?: { name: string; percentage: number; amount: number; recipient?: string }[];
   status: 'completed' | 'pending' | 'failed';
   fee: number;
