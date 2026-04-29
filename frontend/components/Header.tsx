@@ -115,10 +115,6 @@ export default function Header() {
             </div>
           </div>
           
-          <button className="relative w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
-            <Bell size={18} />
-            <div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-rose-500 rounded-full border border-dark" />
-          </button>
         </div>
       </div>
     </header>
