@@ -153,9 +153,9 @@ export default function Activity({ limit, showTitle = true }: ActivityProps) {
                             {tx.type === 'pockets' ? 'Pocket Split' : 'Direct Transfer'}
                           </h3>
                           <span className={`text-[8px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-tighter ${
-                            tx.direction === 'sent' ? 'bg-white/10 text-gray-400' : 'bg-primary/20 text-primary'
+                            (tx.direction || 'sent') === 'sent' ? 'bg-white/10 text-gray-400' : 'bg-primary/20 text-primary'
                           }`}>
-                            {tx.direction}
+                            {tx.direction || 'sent'}
                           </span>
                         </div>
                         <p className="text-sm font-black text-white whitespace-nowrap">
