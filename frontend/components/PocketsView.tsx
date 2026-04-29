@@ -6,23 +6,17 @@ import { PieChart } from 'lucide-react';
 import { getTransactions } from '@/lib/history';
 
 export default function PocketsView() {
-  const [pocketStats, setPocketStats] = useState([
-    { name: 'tuition', balance: 0, goal: 1000, color: 'bg-blue-500/20 text-blue-400' },
-    { name: 'savings', balance: 0, goal: 500, color: 'bg-emerald-500/20 text-emerald-400' },
-    { name: 'medical', balance: 0, goal: 200, color: 'bg-rose-500/20 text-rose-400' },
-    { name: 'vacation', balance: 0, goal: 1500, color: 'bg-amber-500/20 text-amber-400' },
-  ]);
+  const [pocketStats, setPocketStats] = useState<{name: string, balance: number, goal: number, color: string}[]>([]);
 
   useEffect(() => {
     const history = getTransactions();
-    const balances: Record<string, number> = {
-      tuition: 0,
-      savings: 0,
-      medical: 0,
-      vacation: 0
-    };
+    const balances: Record<string, number> = {};
+    
+    // Default pockets to show even if 0 balance
+    const defaultPockets = ['tuition', 'savings', 'medical'];
+    defaultPockets.forEach(p => balances[p] = 0);
 
-    // Sum up amounts from all successful pocket transactions
+    // Discover and sum up amounts from all successful pocket transactions
     history.forEach(tx => {
       if (tx.type === 'pockets' && tx.status === 'completed' && tx.pockets) {
         tx.pockets.forEach(p => {
@@ -30,17 +24,29 @@ export default function PocketsView() {
           if (balances[name] !== undefined) {
             balances[name] += p.amount;
           } else {
-            // Support custom pockets if any
             balances[name] = p.amount;
           }
         });
       }
     });
 
-    setPocketStats(prev => prev.map(p => ({
-      ...p,
-      balance: balances[p.name.toLowerCase()] || 0
-    })));
+    const colors = [
+      'bg-blue-500/20 text-blue-400',
+      'bg-emerald-500/20 text-emerald-400',
+      'bg-rose-500/20 text-rose-400',
+      'bg-amber-500/20 text-amber-400',
+      'bg-purple-500/20 text-purple-400',
+      'bg-cyan-500/20 text-cyan-400'
+    ];
+
+    const dynamicPockets = Object.keys(balances).map((name, idx) => ({
+      name,
+      balance: balances[name],
+      goal: name === 'tuition' ? 1000 : name === 'savings' ? 500 : name === 'medical' ? 200 : 1000,
+      color: colors[idx % colors.length]
+    }));
+
+    setPocketStats(dynamicPockets);
   }, []);
 
   const totalBalance = pocketStats.reduce((acc, p) => acc + p.balance, 0);
