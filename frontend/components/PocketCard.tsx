@@ -45,8 +45,8 @@ export default function PocketCard({ name, balance, goal, color }: PocketCardPro
         />
       </div>
       
-      <button className="w-full py-2 border border-primary text-primary rounded hover:bg-primary/10 transition">
-        {name === 'tuition' ? 'Pay School' : name === 'savings' ? 'Add to Yield' : 'Withdraw'}
+      <button className="w-full py-2 border border-primary text-primary rounded-xl font-bold hover:bg-primary/10 transition-all active:scale-95">
+        Use it
       </button>
     </motion.div>
   );

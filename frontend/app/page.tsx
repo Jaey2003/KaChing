@@ -12,6 +12,7 @@ import PocketsView from '@/components/PocketsView';
 import WalletView from '@/components/WalletView';
 import ProfileView from '@/components/ProfileView';
 import Navigation from '@/components/Navigation';
+import Header from '@/components/Header';
 
 export default function Home() {
   const [isConnected, setIsConnected] = useState(false);
@@ -65,7 +66,8 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-dark text-white p-6 pb-32">
+    <main className="min-h-screen bg-dark text-white p-6 pt-24 pb-32">
+      <Header />
       <div className="max-w-md mx-auto">
         {activeTab === 'home' && <Dashboard />}
         {activeTab === 'pockets' && <PocketsView />}
