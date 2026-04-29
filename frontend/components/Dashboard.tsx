@@ -71,7 +71,14 @@ export default function Dashboard() {
       <div className="space-y-4">
         <div className="flex justify-between items-center px-1">
           <h2 className="text-lg font-bold text-white tracking-tight">Pocket Progress</h2>
-          <button className="text-primary text-xs font-bold hover:underline">Manage All</button>
+          <button 
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent('change-tab', { detail: 'pockets' }));
+            }}
+            className="text-primary text-xs font-bold hover:underline"
+          >
+            Manage All
+          </button>
         </div>
         <div className="grid gap-4">
           {pockets.map((pocket) => (

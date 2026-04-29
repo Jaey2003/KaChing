@@ -8,6 +8,7 @@ import WalletConnect from '@/components/WalletConnect';
 import SendForm from '@/components/SendForm';
 import Dashboard from '@/components/Dashboard';
 import Activity from '@/components/Activity';
+import PocketsView from '@/components/PocketsView';
 import Navigation from '@/components/Navigation';
 
 export default function Home() {
@@ -65,6 +66,7 @@ export default function Home() {
     <main className="min-h-screen bg-dark text-white p-6 pb-32">
       <div className="max-w-md mx-auto">
         {activeTab === 'home' && <Dashboard />}
+        {activeTab === 'pockets' && <PocketsView />}
         
         {activeTab === 'transfer' && (
           <div className="flex flex-col min-h-[calc(100vh-200px)]">
@@ -151,4 +153,4 @@ export default function Home() {
       <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
     </main>
   );
-}
+}
