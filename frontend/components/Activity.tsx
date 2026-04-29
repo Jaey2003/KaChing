@@ -167,7 +167,7 @@ export default function Activity({ limit, showTitle = true }: ActivityProps) {
                         </p>
                       <div className="flex justify-between items-center mt-0.5">
                         <p className="text-[10px] text-gray-500 font-medium">
-                          {new Date(tx.timestamp).toLocaleDateString()} {new Date(tx.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {tx.anchor}
+                          {new Date(tx.timestamp).toLocaleDateString()} {new Date(tx.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })} • {tx.anchor}
                         </p>
                         <div className="text-gray-500">
                           {expandedTx === tx.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
