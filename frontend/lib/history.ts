@@ -87,3 +87,61 @@ export function getUsage(): UsageRecord[] {
     return [];
   }
 }
+
+// ── API-backed Usage Records (MySQL via phpMyAdmin) ──────────────────────────
+
+export async function saveUsageAPI(record: Omit<UsageRecord, 'id' | 'timestamp'>) {
+  const id = Math.random().toString(36).substring(2, 15).toUpperCase();
+  const walletAddress = sessionStorage.getItem('kaChing_user') || '';
+
+  try {
+    const res = await fetch('/api/usage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        record_id: id,
+        pocket_name: record.pocketName,
+        amount: record.amount,
+        asset: record.asset,
+        purpose: record.purpose,
+        recipient: record.recipient || null,
+        evidence: record.evidence || null,
+        evidence_name: record.evidenceName || null,
+        wallet_address: walletAddress,
+      }),
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.error);
+    return data;
+  } catch (err) {
+    console.warn('API save failed, falling back to localStorage', err);
+    return saveUsage(record);
+  }
+}
+
+export async function getUsageAPI(): Promise<UsageRecord[]> {
+  const walletAddress = sessionStorage.getItem('kaChing_user') || '';
+
+  try {
+    const res = await fetch(`/api/usage?wallet=${encodeURIComponent(walletAddress)}`);
+    const data = await res.json();
+    if (!data.success) throw new Error(data.error);
+
+    // Map DB rows back to UsageRecord shape
+    return (data.data || []).map((row: any) => ({
+      id: row.record_id || String(row.id),
+      pocketName: row.pocket_name,
+      amount: parseFloat(row.amount),
+      asset: row.asset,
+      purpose: row.purpose,
+      recipient: row.recipient || undefined,
+      evidence: row.evidence || null,
+      evidenceName: row.evidence_name || null,
+      timestamp: new Date(row.created_at).getTime(),
+      status: row.status as 'completed' | 'pending',
+    }));
+  } catch (err) {
+    console.warn('API fetch failed, falling back to localStorage', err);
+    return getUsage();
+  }
+}

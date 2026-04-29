@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, Send, Upload, X, ImageIcon, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { saveUsage } from '@/lib/history';
+import { saveUsageAPI } from '@/lib/history';
 
 export default function UsePocketForm() {
   const router = useRouter();
@@ -46,7 +46,7 @@ export default function UsePocketForm() {
     setEvidencePreview(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -69,8 +69,8 @@ export default function UsePocketForm() {
       return;
     }
 
-    // Save usage record to localStorage
-    saveUsage({
+    // Save usage record to MySQL via API (falls back to localStorage on failure)
+    await saveUsageAPI({
       pocketName,
       amount: numAmount,
       asset: pocketAsset,
