@@ -158,12 +158,16 @@ export default function Activity({ limit, showTitle = true }: ActivityProps) {
                             {tx.direction || 'sent'}
                           </span>
                         </div>
-                        <p className="text-sm font-black text-white whitespace-nowrap">
-                          {tx.amount > 0 ? tx.amount.toFixed(2) : '-100.00'} <span className="text-[10px] text-gray-500 font-bold">{tx.asset}</span>
+                        <p className={`text-sm font-black whitespace-nowrap ${
+                          (tx.direction || 'sent') === 'sent' ? 'text-white' : 'text-primary'
+                        }`}>
+                          {(tx.direction || 'sent') === 'sent' ? '-' : '+'}
+                          {tx.amount > 0 ? tx.amount.toFixed(2) : '100.00'} 
+                          <span className="text-[10px] text-gray-500 font-bold ml-1">{tx.asset}</span>
                         </p>
                       <div className="flex justify-between items-center mt-0.5">
                         <p className="text-[10px] text-gray-500 font-medium">
-                          {new Date(tx.timestamp).toLocaleDateString()} • {tx.anchor}
+                          {new Date(tx.timestamp).toLocaleDateString()} {new Date(tx.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {tx.anchor}
                         </p>
                         <div className="text-gray-500">
                           {expandedTx === tx.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
