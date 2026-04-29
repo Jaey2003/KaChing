@@ -1,13 +1,13 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { GraduationCap, PiggyBank, Heart, PalmTree, Coins, Wallet } from 'lucide-react';
+import { GraduationCap, PiggyBank, Heart, Plane, Coins, Wallet } from 'lucide-react';
 
 const icons = {
   tuition: GraduationCap,
   savings: PiggyBank,
   medical: Heart,
-  vacation: PalmTree,
+  vacation: Plane,
   default: Coins,
 };
 
