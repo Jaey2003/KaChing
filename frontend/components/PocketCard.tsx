@@ -1,12 +1,14 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { GraduationCap, PiggyBank, Heart } from 'lucide-react';
+import { GraduationCap, PiggyBank, Heart, PalmTree, Coins, Wallet } from 'lucide-react';
 
 const icons = {
   tuition: GraduationCap,
   savings: PiggyBank,
   medical: Heart,
+  vacation: PalmTree,
+  default: Coins,
 };
 
 interface PocketCardProps {
@@ -17,7 +19,7 @@ interface PocketCardProps {
 }
 
 export default function PocketCard({ name, balance, goal, color }: PocketCardProps) {
-  const Icon = icons[name as keyof typeof icons];
+  const Icon = icons[name as keyof typeof icons] || icons.default;
   const progress = (balance / goal) * 100;
 
   return (
