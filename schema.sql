@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS usage_records (
   amount DECIMAL(18, 7) NOT NULL,
   asset VARCHAR(20) NOT NULL DEFAULT 'XLM',
   purpose VARCHAR(255) NOT NULL,
-  recipient VARCHAR(255) DEFAULT NULL,
+  recipient TEXT DEFAULT NULL,
   evidence LONGTEXT DEFAULT NULL,
   evidence_name VARCHAR(255) DEFAULT NULL,
   status VARCHAR(20) NOT NULL DEFAULT 'completed',
