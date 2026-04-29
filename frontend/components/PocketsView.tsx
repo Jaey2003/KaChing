@@ -21,13 +21,18 @@ export default function PocketsView() {
       if (tx.type === 'pockets' && tx.status === 'completed' && tx.pockets) {
         tx.pockets.forEach(p => {
           const name = p.name.toLowerCase();
-          // Logic: If recipient matches user address or is missing (self-send default), it's "My Pocket"
-          // In our SendForm/FeeComparison, we set the recipient.
-          const isMe = !p.recipient || p.recipient === userAddress;
           
-          if (isMe) {
+          // My Pockets: Funds RECEIVED from someone else
+          // (Recipient is Me, and it's an incoming transaction)
+          const isReceived = p.recipient === userAddress;
+          
+          // Sent Pockets: Funds SENT to someone else
+          // (Recipient is NOT me, and I was the sender)
+          const isSent = p.recipient && p.recipient !== userAddress;
+          
+          if (isReceived) {
             myBalances[name] = (myBalances[name] || 0) + p.amount;
-          } else {
+          } else if (isSent) {
             sentBalances[name] = (sentBalances[name] || 0) + p.amount;
           }
         });
