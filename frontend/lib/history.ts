@@ -1,6 +1,7 @@
 export interface Transaction {
   id: string;
   type: 'direct' | 'pockets';
+  direction: 'sent' | 'received';
   amount: number;
   asset: string;
   timestamp: number;
@@ -19,6 +20,7 @@ export function saveTransaction(tx: Omit<Transaction, 'id' | 'timestamp'>) {
   const history = getTransactions();
   const newTx: Transaction = {
     ...tx,
+    direction: 'sent', // Locally saved transactions are always sent by the user
     id: Math.random().toString(36).substring(2, 15).toUpperCase(),
     timestamp: Date.now(),
   };

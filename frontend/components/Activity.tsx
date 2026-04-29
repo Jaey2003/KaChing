@@ -47,16 +47,20 @@ export default function Activity({ limit, showTitle = true }: ActivityProps) {
         const lastRecord = horizonHistory._embedded.records[horizonHistory._embedded.records.length - 1];
         setPagingToken(lastRecord.paging_token);
 
-        const blockchainTxs: Transaction[] = horizonHistory._embedded.records.map((record: any) => ({
-          id: record.hash,
-          type: record.memo_type === 'text' && record.memo.includes('split') ? 'pockets' : 'direct',
-          amount: 0,
-          asset: 'XLM',
-          timestamp: new Date(record.created_at).getTime(),
-          status: record.successful ? 'completed' : 'failed',
-          fee: parseFloat(record.fee_charged) / 10000000,
-          anchor: 'Stellar Network'
-        }));
+        const blockchainTxs: Transaction[] = horizonHistory._embedded.records.map((record: any) => {
+          const isSent = record.source_account === publicKey;
+          return {
+            id: record.hash,
+            type: record.memo_type === 'text' && record.memo.includes('split') ? 'pockets' : 'direct',
+            direction: isSent ? 'sent' : 'received',
+            amount: 0, // Amount needs careful parsing from operations, but for MVP we use a placeholder or tag
+            asset: 'XLM',
+            timestamp: new Date(record.created_at).getTime(),
+            status: record.successful ? 'completed' : 'failed',
+            fee: parseFloat(record.fee_charged) / 10000000,
+            anchor: 'Stellar Network'
+          };
+        });
 
         const seen = new Set(isMore ? transactions.map(t => t.id) : []);
         const currentTxs = isMore ? transactions : localHistory;
@@ -144,14 +148,19 @@ export default function Activity({ limit, showTitle = true }: ActivityProps) {
                       {tx.type === 'pockets' ? <PieChart size={18} /> : <ArrowUpRight size={18} />}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex justify-between items-start">
-                        <h3 className="text-sm font-bold text-white capitalize truncate pr-2">
-                          {tx.type === 'pockets' ? 'Pocket Split' : 'Direct Transfer'}
-                        </h3>
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-sm font-bold text-white capitalize truncate pr-2">
+                            {tx.type === 'pockets' ? 'Pocket Split' : 'Direct Transfer'}
+                          </h3>
+                          <span className={`text-[8px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-tighter ${
+                            tx.direction === 'sent' ? 'bg-white/10 text-gray-400' : 'bg-primary/20 text-primary'
+                          }`}>
+                            {tx.direction}
+                          </span>
+                        </div>
                         <p className="text-sm font-black text-white whitespace-nowrap">
                           {tx.amount > 0 ? tx.amount.toFixed(2) : '-100.00'} <span className="text-[10px] text-gray-500 font-bold">{tx.asset}</span>
                         </p>
-                      </div>
                       <div className="flex justify-between items-center mt-0.5">
                         <p className="text-[10px] text-gray-500 font-medium">
                           {new Date(tx.timestamp).toLocaleDateString()} • {tx.anchor}
