@@ -11,12 +11,8 @@ export default function PocketsView() {
   useEffect(() => {
     const history = getTransactions();
     const balances: Record<string, number> = {};
-    
-    // Default pockets to show even if 0 balance
-    const defaultPockets = ['tuition', 'savings', 'medical'];
-    defaultPockets.forEach(p => balances[p] = 0);
 
-    // Discover and sum up amounts from all successful pocket transactions
+    // Dynamically discover all pockets from successful transactions
     history.forEach(tx => {
       if (tx.type === 'pockets' && tx.status === 'completed' && tx.pockets) {
         tx.pockets.forEach(p => {
@@ -42,7 +38,7 @@ export default function PocketsView() {
     const dynamicPockets = Object.keys(balances).map((name, idx) => ({
       name,
       balance: balances[name],
-      goal: name === 'tuition' ? 1000 : name === 'savings' ? 500 : name === 'medical' ? 200 : 1000,
+      goal: 1000, // Default goal for dynamic pockets
       color: colors[idx % colors.length]
     }));
 
@@ -59,22 +55,12 @@ export default function PocketsView() {
         </h1>
       </div>
 
-      {/* Summary Card for "One Transaction" feel */}
+      {/* Summary Card */}
       <div className="glass p-6 rounded-3xl border border-white/5 bg-gradient-to-br from-white/5 to-transparent">
-        <div className="flex justify-between items-end">
-          <div>
-            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Total Pocket Value</p>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-black text-white">${totalBalance.toFixed(2)}</span>
-              <span className="text-sm font-bold text-gray-500 uppercase">USD</span>
-            </div>
-          </div>
-          <button 
-            onClick={() => window.dispatchEvent(new CustomEvent('change-tab', { detail: 'transfer' }))}
-            className="px-4 py-2 bg-primary text-dark text-xs font-black rounded-xl shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
-          >
-            FUND ALL POCKETS
-          </button>
+        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Total Pocket Value</p>
+        <div className="flex items-baseline gap-2">
+          <span className="text-3xl font-black text-white">${totalBalance.toFixed(2)}</span>
+          <span className="text-sm font-bold text-gray-500 uppercase">USD</span>
         </div>
       </div>
 
