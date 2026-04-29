@@ -29,7 +29,7 @@ export default function Dashboard() {
       if (tx.type === 'pockets' && tx.status === 'completed' && tx.pockets) {
         tx.pockets.forEach(p => {
           const name = p.name.toLowerCase();
-          const isReceived = p.recipient === userAddress;
+          const isReceived = p.recipient === publicKey;
           
           if (isReceived) {
             pocketBalances[name] = (pocketBalances[name] || 0) + p.amount;
