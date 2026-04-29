@@ -27,7 +27,7 @@ export default function PocketsView() {
     history.forEach(tx => {
       if (tx.type === 'pockets' && tx.status === 'completed' && tx.pockets) {
         const txRecipient = tx.recipient;
-        const isUserSender = tx.direction === 'sent';
+        const isUserSender = (tx.sender || '').toLowerCase() === (userAddress || '').toLowerCase();
 
         const relevantPocketsForMe = tx.pockets.filter(p => {
           const pRecipient = (p.recipient || txRecipient || '').toLowerCase();
