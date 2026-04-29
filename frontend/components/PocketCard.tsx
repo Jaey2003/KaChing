@@ -17,9 +17,10 @@ interface PocketCardProps {
   goal: number;
   color: string;
   asset?: string;
+  actionLabel?: string;
 }
 
-export default function PocketCard({ name, balance, goal, color, asset = 'XLM' }: PocketCardProps) {
+export default function PocketCard({ name, balance, goal, color, asset = 'XLM', actionLabel = 'Use it' }: PocketCardProps) {
   const progress = Math.min((balance / goal) * 100, 100);
 
   return (
@@ -51,7 +52,7 @@ export default function PocketCard({ name, balance, goal, color, asset = 'XLM' }
       </div>
       
       <button className="w-full py-2 border border-primary text-primary rounded-xl font-bold hover:bg-primary/10 transition-all active:scale-95">
-        Use it
+        {actionLabel}
       </button>
     </motion.div>
   );

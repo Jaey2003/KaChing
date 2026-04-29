@@ -137,7 +137,7 @@ export default function PocketsView() {
               
               <div className="grid gap-4">
                 {group.pockets.map((pocket, pIdx) => (
-                  <PocketCard key={`${group.id}-${pIdx}`} {...pocket} />
+                  <PocketCard key={`${group.id}-${pIdx}`} {...pocket} actionLabel={activeSubTab === 'sent' ? 'View' : undefined} />
                 ))}
               </div>
             </div>
