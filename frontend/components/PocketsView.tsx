@@ -7,37 +7,15 @@ import { getTransactions } from '@/lib/history';
 
 export default function PocketsView() {
   const [activeSubTab, setActiveSubTab] = useState<'my' | 'sent'>('my');
-  const [myPockets, setMyPockets] = useState<{name: string, balance: number, goal: number, color: string}[]>([]);
-  const [sentPockets, setSentPockets] = useState<{name: string, balance: number, goal: number, color: string}[]>([]);
+  const [myGroups, setMyGroups] = useState<{ id: string, asset: string, date: string, pockets: any[] }[]>([]);
+  const [sentGroups, setSentGroups] = useState<{ id: string, asset: string, date: string, pockets: any[] }[]>([]);
 
   useEffect(() => {
     const userAddress = sessionStorage.getItem('kaChing_user');
     const history = getTransactions();
     
-    const myBalances: Record<string, number> = {};
-    const sentBalances: Record<string, number> = {};
-
-    history.forEach(tx => {
-      if (tx.type === 'pockets' && tx.status === 'completed' && tx.pockets) {
-        tx.pockets.forEach(p => {
-          const name = p.name.toLowerCase();
-          
-          // My Pockets: Funds RECEIVED from someone else
-          // (Recipient is Me, and it's an incoming transaction)
-          const isReceived = p.recipient === userAddress;
-          
-          // Sent Pockets: Funds SENT to someone else
-          // (Recipient is NOT me, and I was the sender)
-          const isSent = p.recipient && p.recipient !== userAddress;
-          
-          if (isReceived) {
-            myBalances[name] = (myBalances[name] || 0) + p.amount;
-          } else if (isSent) {
-            sentBalances[name] = (sentBalances[name] || 0) + p.amount;
-          }
-        });
-      }
-    });
+    const myTemp: { id: string, asset: string, date: string, pockets: any[] }[] = [];
+    const sentTemp: { id: string, asset: string, date: string, pockets: any[] }[] = [];
 
     const colors = [
       'bg-blue-500/20 text-blue-400',
@@ -46,20 +24,61 @@ export default function PocketsView() {
       'bg-amber-500/20 text-amber-400',
     ];
 
-    const formatPockets = (balances: Record<string, number>) => 
-      Object.keys(balances).map((name, idx) => ({
-        name,
-        balance: balances[name],
-        goal: 1000,
-        color: colors[idx % colors.length]
-      }));
+    history.forEach(tx => {
+      if (tx.type === 'pockets' && tx.status === 'completed' && tx.pockets) {
+        const txRecipient = tx.recipient;
+        const isUserSender = tx.direction === 'sent';
 
-    setMyPockets(formatPockets(myBalances));
-    setSentPockets(formatPockets(sentBalances));
+        const relevantPocketsForMe = tx.pockets.filter(p => {
+          const pRecipient = (p.recipient || txRecipient || '').toLowerCase();
+          return (userAddress || '').toLowerCase() && pRecipient === (userAddress || '').toLowerCase();
+        });
+
+        const relevantPocketsForSent = isUserSender ? tx.pockets : [];
+
+        const txAmount = tx.pockets.reduce((sum, p) => sum + p.amount, 0);
+
+        if (relevantPocketsForMe.length > 0) {
+          myTemp.push({
+            id: tx.id,
+            asset: tx.asset,
+            date: new Date(tx.timestamp).toLocaleString(),
+            pockets: relevantPocketsForMe.map((p, idx) => ({
+              ...p,
+              balance: p.amount,
+              color: colors[idx % colors.length],
+              goal: p.amount, // Set goal to match balance so it shows as complete
+              asset: tx.asset
+            }))
+          });
+        }
+
+        if (relevantPocketsForSent.length > 0) {
+          sentTemp.push({
+            id: tx.id,
+            asset: tx.asset,
+            date: new Date(tx.timestamp).toLocaleString(),
+            pockets: relevantPocketsForSent.map((p, idx) => ({
+              ...p,
+              balance: p.amount,
+              color: colors[idx % colors.length],
+              goal: p.amount, // Set goal to match balance so it shows as complete
+              asset: tx.asset
+            }))
+          });
+        }
+      }
+    });
+
+    setMyGroups(myTemp);
+    setSentGroups(sentTemp);
   }, []);
 
-  const currentPockets = activeSubTab === 'my' ? myPockets : sentPockets;
-  const totalBalance = currentPockets.reduce((acc, p) => acc + p.balance, 0);
+  const currentGroups = activeSubTab === 'my' ? myGroups : sentGroups;
+  const totalValue = currentGroups.reduce((acc, group) => 
+    acc + group.pockets.reduce((pAcc, p) => pAcc + p.amount, 0), 0
+  );
+  const primaryAsset = currentGroups[0]?.asset || 'XLM';
 
   return (
     <div className="space-y-6">
@@ -68,42 +87,51 @@ export default function PocketsView() {
           <PieChart className="text-primary" /> Pockets
         </h1>
         
-        {/* Sub-tabs for My vs Sent */}
         <div className="flex bg-white/5 p-1 rounded-2xl border border-white/5">
           <button 
             onClick={() => setActiveSubTab('my')}
-            className={`flex-1 py-2.5 rounded-xl text-xs font-black transition-all ${
-              activeSubTab === 'my' ? 'bg-primary text-dark shadow-lg shadow-primary/20' : 'text-gray-500 hover:text-white'
-            }`}
+            className={`flex-1 py-2.5 rounded-xl text-xs font-black transition-all ${activeSubTab === 'my' ? 'bg-primary text-dark shadow-lg shadow-primary/20' : 'text-gray-500 hover:text-white'}`}
           >
             MY POCKETS
           </button>
           <button 
             onClick={() => setActiveSubTab('sent')}
-            className={`flex-1 py-2.5 rounded-xl text-xs font-black transition-all ${
-              activeSubTab === 'sent' ? 'bg-primary text-dark shadow-lg shadow-primary/20' : 'text-gray-500 hover:text-white'
-            }`}
+            className={`flex-1 py-2.5 rounded-xl text-xs font-black transition-all ${activeSubTab === 'sent' ? 'bg-primary text-dark shadow-lg shadow-primary/20' : 'text-gray-500 hover:text-white'}`}
           >
             SENT POCKETS
           </button>
         </div>
       </div>
 
-      {/* Summary Card */}
       <div className="glass p-6 rounded-3xl border border-white/5 bg-gradient-to-br from-white/5 to-transparent">
         <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">
           {activeSubTab === 'my' ? 'Total My Value' : 'Total Sent Value'}
         </p>
         <div className="flex items-baseline gap-2">
-          <span className="text-3xl font-black text-white">${totalBalance.toFixed(2)}</span>
-          <span className="text-sm font-bold text-gray-500 uppercase">USD</span>
+          <span className="text-3xl font-black text-white">{totalValue.toFixed(2)}</span>
+          <span className="text-sm font-bold text-gray-500 uppercase">{primaryAsset}</span>
         </div>
       </div>
 
-      <div className="grid gap-4">
-        {currentPockets.length > 0 ? (
-          currentPockets.map((pocket) => (
-            <PocketCard key={pocket.name} {...pocket} />
+      <div className="space-y-8">
+        {currentGroups.length > 0 ? (
+          currentGroups.map((group) => (
+            <div key={group.id} className="space-y-4">
+              <div className="flex items-center gap-3 px-1">
+                <div className="h-[1px] flex-1 bg-white/5"></div>
+                <div className="flex flex-col items-center">
+                  <span className="text-[9px] font-black text-primary uppercase tracking-[0.2em]">Transaction {group.id.substring(0, 8)}</span>
+                  <span className="text-[8px] font-bold text-gray-600">{group.date}</span>
+                </div>
+                <div className="h-[1px] flex-1 bg-white/5"></div>
+              </div>
+              
+              <div className="grid gap-4">
+                {group.pockets.map((pocket, pIdx) => (
+                  <PocketCard key={`${group.id}-${pIdx}`} {...pocket} />
+                ))}
+              </div>
+            </div>
           ))
         ) : (
           <div className="py-20 text-center glass rounded-3xl border border-dashed border-white/10">

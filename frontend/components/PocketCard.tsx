@@ -16,25 +16,30 @@ interface PocketCardProps {
   balance: number;
   goal: number;
   color: string;
+  asset?: string;
 }
 
-export default function PocketCard({ name, balance, goal, color }: PocketCardProps) {
-  const Icon = icons[name as keyof typeof icons] || icons.default;
-  const progress = (balance / goal) * 100;
+export default function PocketCard({ name, balance, goal, color, asset = 'XLM' }: PocketCardProps) {
+  const progress = Math.min((balance / goal) * 100, 100);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="p-4 bg-surface rounded-lg border border-white/10"
+      className="glass p-5 rounded-3xl border border-white/5 hover:border-primary/30 transition-all group"
     >
-      <div className="flex items-center gap-3 mb-3">
-        <div className={`p-2 rounded-lg ${color}`}>
-          <Icon size={20} />
-        </div>
-        <div>
-          <h3 className="font-bold capitalize">{name}</h3>
-          <p className="text-sm text-gray-400">${balance.toFixed(2)} / ${goal}</p>
+      <div className="flex justify-between items-start mb-4">
+        <div className="flex items-center gap-3">
+          <div className={`p-2.5 rounded-xl ${color}`}>
+            {name.toLowerCase() === 'tuition' ? <GraduationCap size={20} /> : 
+             name.toLowerCase() === 'savings' ? <PiggyBank size={20} /> : <Heart size={20} />}
+          </div>
+          <div>
+            <h3 className="font-bold capitalize text-white">{name}</h3>
+            <p className="text-sm text-gray-400">
+              {balance.toFixed(2)} / {goal.toFixed(2)} <span className="text-[10px] font-bold text-gray-600">{asset}</span>
+            </p>
+          </div>
         </div>
       </div>
       
