@@ -5,7 +5,7 @@ export interface Transaction {
   asset: string;
   timestamp: number;
   recipient?: string;
-  pockets?: { name: string; percentage: number; amount: number }[];
+  pockets?: { name: string; percentage: number; amount: number; recipient?: string }[];
   status: 'completed' | 'pending' | 'failed';
   fee: number;
   anchor: string;

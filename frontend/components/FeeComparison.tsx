@@ -68,13 +68,11 @@ export default function FeeComparison() {
       }
 
       // 2. Call the Soroban smart contract
-      // Map pockets to include the recipient address
+      // Map pockets to include the actual recipient address from the form
       const formattedPockets = pocketData.map(p => ({
         name: p.name,
         percentage: p.percentage,
-        // If direct mode, use the recipient address. 
-        // If pockets mode, we'll use the user's own address as the target for now.
-        recipient: mode === 'direct' ? recipient : userAddress
+        recipient: recipient || userAddress // Use form recipient, fallback to self
       }));
 
       const result = await processSplit(
@@ -84,15 +82,18 @@ export default function FeeComparison() {
         activeContractId
       );
       
-      // Save to history
+      // Save to history with recipient info for each pocket
       saveTransaction({
         type: mode as 'direct' | 'pockets',
         amount,
         asset,
         fee: bestQuote.feePct,
         anchor: bestQuote.name,
-        recipient: mode === 'direct' ? recipient : undefined,
-        pockets: mode === 'pockets' ? pocketData : undefined,
+        recipient: recipient,
+        pockets: mode === 'pockets' ? formattedPockets.map((p, i) => ({
+          ...pocketData[i],
+          recipient: p.recipient
+        })) : undefined,
         status: 'completed'
       });
 
