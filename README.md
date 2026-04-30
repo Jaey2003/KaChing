@@ -127,26 +127,33 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
   <table style="width:100%">
     <tr>
       <td width="50%">
-        <p align="center"><b>Wallet Connected State</b></p>
-        <img src="media/wallet-connected.png" alt="Wallet Connected State" width="100%" />
+        <p align="center"><b>Landing Page (Not Connected)</b></p>
+        <img src="media/not-connected.png" alt="Landing Page" width="100%" />
       </td>
       <td width="50%">
-        <p align="center"><b>Balance Displayed</b></p>
-        <img src="media/balance-display.png" alt="Balance Displayed" width="100%" />
+        <p align="center"><b>Wallet Connected State</b></p>
+        <img src="media/wallet-connected.png" alt="Wallet Connected State" width="100%" />
       </td>
     </tr>
     <tr>
       <td width="50%">
+        <p align="center"><b>Dashboard (Balance Displayed)</b></p>
+        <img src="media/balance-display.png" alt="Balance Displayed" width="100%" />
+      </td>
+      <td width="50%">
         <p align="center"><b>Successful Testnet Transaction</b></p>
         <img src="media/successful-tx.png" alt="Successful Testnet Transaction" width="100%" />
       </td>
-      <td width="50%">
-        <p align="center"><b>Transaction Result</b></p>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <p align="center"><b>Transaction Result & Confirmation</b></p>
         <img src="media/tx-result.png" alt="Transaction Result" width="100%" />
       </td>
     </tr>
   </table>
 </div>
+
 
 ## 🌌 Stellar Features Leveraged
 - **Soroban Smart Contracts**: Programmatic distribution of funds.
