@@ -104,6 +104,22 @@ The core logic begins once the user initiates a **Direct Transaction** or **Pock
    - **Escrow Allocation**: Instead of a final transfer, the contract updates an on-chain ledger, "locking" the funds into the recipient's virtual pockets for controlled spending.
 5. **Atomic Execution**: The contract executes all ledger updates in a single atomic transaction. Either every recipient receives their allocated budget, or the entire transaction fails, preventing any "lost" money.
 
+## 🛡️ Error Handling & Resilience
+
+To ensure a stable cross-border remittance experience, KaChing implements multi-layer error handling:
+
+1. **Client-Side Validation**:
+   - **Split Enforcement**: Prevents transaction initiation unless pocket allocations sum to exactly 100%.
+   - **Asset Checks**: Verifies sufficient balance and trustlines before allowing the "Compare" step.
+
+2. **Wallet & Auth Handling**:
+   - **Connection Guard**: Automatically redirects or prompts users if the Freighter session expires or is missing.
+   - **Rejection Recovery**: Gracefully handles user-cancelled signing requests, providing clear feedback without refreshing the app.
+
+3. **Network Resilience**:
+   - **Stable Polling**: Uses a 60-second polling window with the Horizon API to confirm transactions, bypassing common RPC timeouts and CORS issues.
+   - **Fallback Logic**: Provides specific "Timeout" guidance if the network is congested, advising users on how to verify their transaction status on-chain.
+
 ## 📜 Smart Contract Deployment
 The KaChing core logic is handled by a Soroban smart contract. There are two ways to deploy it:
 
