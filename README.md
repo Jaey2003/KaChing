@@ -10,11 +10,13 @@
 ## 🎯 Problem & Solution
 **Problem:** Philippine remittances hit $35.63B in 2025, yet 43% of senders cite hidden fees as their top frustration. The PH Senate's OFW Remittance Protection Act warns that "such costs diminish OFW income" and mandates transparency. Families receiving irregular inflows struggle to allocate funds toward tuition, medical, and savings, causing cash leakage.
 
-**Solution:** KaChing compares real-time anchor fees on Stellar, identifies the cheapest route, and executes transfers. It uses a **Soroban Smart Contract** to automatically split arriving funds into labeled "Financial Pockets" based on user-defined percentages.
+**Solution:** KaChing identifies the cheapest remittance route and offers two ways to send funds: **Direct Transfers** for traditional one-to-one payments, and **Managed Financial Pockets** for automated budgeting. Using a **Soroban Smart Contract** as a secure financial vault, it can split arriving funds into labeled budgets (e.g., Tuition, Savings) that are held by the contract, ensuring funds are used only for their intended purpose.
 
 ## ✨ Key Features
 - **Smart Fee Routing**: Scans multiple Stellar Anchors to find the most cost-effective path.
-- **Financial Pockets**: Multi-recipient splits executed via a custom Soroban contract (`process_split`).
+- **Direct Transfers**: Seamlessly send any Stellar asset directly to a single recipient wallet.
+- **Managed Financial Pockets**: Multi-recipient splits executed via a custom Soroban contract that acts as an escrow vault.
+- **Budget Enforcement**: Ensures funds are used for their intended purpose by restricting withdrawals to the allocated pocket balance.
 - **Blockchain History Sync**: Real-time transaction tracking directly from Stellar Horizon with full pagination support.
 - **Freighter Integration**: Secure transaction signing using the official Stellar browser wallet.
 - **Resilient Polling**: Robust transaction confirmation pipeline that bypasses SDK limitations for high reliability.
@@ -87,8 +89,9 @@ The core logic begins once the user initiates a **Direct Transaction** or **Pock
 3. **Soroban Invocation**: The signed XDR is submitted to the network, invoking the `process_split` function on the KaChing contract.
 4. **Validation & Calculation**: 
    - The contract verifies that the sum of all pocket percentages equals exactly 100%.
-   - It performs high-precision arithmetic to calculate the exact stroop/token amount for each recipient.
-5. **Atomic Execution**: The contract executes all transfers in a single atomic transaction. Either every recipient receives their funds, or the entire transaction fails, preventing any "lost" money.
+   - It performs high-precision arithmetic to calculate the exact stroop/token amount for each budget.
+   - **Escrow Allocation**: Instead of a final transfer, the contract updates an on-chain ledger, "locking" the funds into the recipient's virtual pockets for controlled spending.
+5. **Atomic Execution**: The contract executes all ledger updates in a single atomic transaction. Either every recipient receives their allocated budget, or the entire transaction fails, preventing any "lost" money.
 
 ## 📜 Smart Contract Deployment
 The KaChing core logic is handled by a Soroban smart contract. There are two ways to deploy it:
@@ -231,6 +234,47 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
         <p align="center"><b>7. On-Chain Verification</b></p>
         <img src="media/direct-transfer-smart-contract-deployment.png" alt="On-Chain Verification" width="100%" />
         <p align="center"><small>Verified execution of the <code>process_split</code> function on Stellar Expert.</small></p>
+      </td>
+    </tr>
+  </table>
+</div>
+
+## 🔄 Core Workflow: Financial Pockets
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td width="33%">
+        <p align="center"><b>1. Initiation</b></p>
+        <img src="media/transfer-page.png" alt="Initiation" width="100%" />
+        <p align="center"><small>User selects "Financial Pockets" for multi-budget distribution.</small></p>
+      </td>
+      <td width="33%">
+        <p align="center"><b>2. Percentage Allocation</b></p>
+        <img src="media/pocket-split.png" alt="Allocation" width="100%" />
+        <p align="center"><small>Defining exact percentages for Tuition, Savings, and Emergency funds.</small></p>
+      </td>
+      <td width="33%">
+        <p align="center"><b>3. Vault Deposit</b></p>
+        <img src="media/processing-transaction.png" alt="Vault Deposit" width="100%" />
+        <p align="center"><small>The contract splits funds and stores them in a secure escrow ledger.</small></p>
+      </td>
+    </tr>
+    <tr>
+      <td width="33%">
+        <p align="center"><b>4. Budget Enforcement</b></p>
+        <img src="media/balance-display.png" alt="Budgeting" width="100%" />
+        <p align="center"><small>Funds are locked to their specific purpose (e.g., "Tuition" money cannot be spent elsewhere).</small></p>
+      </td>
+      <td width="33%">
+        <p align="center"><b>5. Controlled Spending</b></p>
+        <img src="media/pockets-page.png" alt="Spending" width="100%" />
+        <p align="center"><small>Receiver uses the "Use Pocket" feature to spend only from the assigned budget.</small></p>
+      </td>
+      <td width="33%">
+        <p align="center"><b>6. On-Chain Ledger</b></p>
+        <img src="media/Transfer-success.png" alt="Success" width="100%" />
+        <p align="center"><small>Real-time verification of remaining pocket balances on the blockchain.</small></p>
       </td>
     </tr>
   </table>
