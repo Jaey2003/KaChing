@@ -187,6 +187,7 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
     </tr>
   </table>
 </div>
+
 ## 🔄 Core Workflow: Direct Transaction
 
 <div align="center">
