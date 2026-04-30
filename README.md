@@ -156,11 +156,6 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
         <p align="center"><small>Primary account overview showing total balance and recent pocket progress.</small></p>
       </td>
       <td width="50%">
-        <p align="center"><b>Activity Log</b></p>
-        <img src="media/activity-page.png" alt="Activity Page" width="100%" />
-        <p align="center"><small>Comprehensive transaction history synced directly with the Stellar blockchain.</small></p>
-      </td>
-      <td width="50%">
         <p align="center"><b>Send Money (Transfer)</b></p>
         <img src="media/transfer-page.png" alt="Transfer Page" width="100%" />
         <p align="center"><small>Central hub for selecting between Direct Transfers or Financial Pocket splits.</small></p>
@@ -171,6 +166,11 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
         <p align="center"><b>Pockets Management</b></p>
         <img src="media/pockets-page.png" alt="Pockets Page" width="100%" />
         <p align="center"><small>View and manage existing financial pockets and their allocation history.</small></p>
+      </td>
+      <td width="50%">
+        <p align="center"><b>Activity Log</b></p>
+        <img src="media/activity-page.png" alt="Activity Page" width="100%" />
+        <p align="center"><small>Comprehensive transaction history synced directly with the Stellar blockchain.</small></p>
       </td>
     </tr>
     <tr>
