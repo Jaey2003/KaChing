@@ -164,7 +164,38 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
   </table>
 </div>
 
+### 📱 Application Modules
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td width="50%">
+        <p align="center"><b>Pockets Management</b></p>
+        <img src="media/pockets-page.png" alt="Pockets Page" width="100%" />
+        <p align="center"><small>View and manage existing financial pockets and their allocation history.</small></p>
+      </td>
+      <td width="50%">
+        <p align="center"><b>Activity Log</b></p>
+        <img src="media/activity-page.png" alt="Activity Page" width="100%" />
+        <p align="center"><small>Comprehensive transaction history synced directly with the Stellar blockchain.</small></p>
+      </td>
+    </tr>
+    <tr>
+      <td width="50%">
+        <p align="center"><b>Wallet View</b></p>
+        <img src="media/wallet-page.png" alt="Wallet Page" width="100%" />
+        <p align="center"><small>Detailed breakdown of all Stellar assets, balances, and trustlines.</small></p>
+      </td>
+      <td width="50%">
+        <p align="center"><b>User Profile</b></p>
+        <img src="media/profile-page.png" alt="Profile Page" width="100%" />
+        <p align="center"><small>Manage account settings and view full Stellar public key details.</small></p>
+      </td>
+    </tr>
+  </table>
+</div>
+
 ### 🏆 Success & Confirmation
+
 <div align="center">
   <table style="width:100%">
     <tr>
