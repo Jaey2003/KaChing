@@ -187,7 +187,6 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
     </tr>
   </table>
 </div>
-
 ## 🔄 Core Workflow: Direct Transaction
 
 <div align="center">
@@ -196,29 +195,34 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
       <td width="33%">
         <p align="center"><b>1. Initiation</b></p>
         <img src="media/transfer-page.png" alt="Initiation" width="100%" />
-        <p align="center"><small>User enters asset, amount, and recipient address.</small></p>
+        <p align="center"><small>User lands on the hub to select Direct Transfer.</small></p>
       </td>
       <td width="33%">
-        <p align="center"><b>2. Smart Fee Routing</b></p>
-        <img src="media/balance-display.png" alt="Smart Fee Routing" width="100%" />
-        <p align="center"><small>KaChing scans anchors for the best possible rate.</small></p>
+        <p align="center"><b>2. Transaction Details</b></p>
+        <img src="media/transfer-page.png" alt="Details" width="100%" />
+        <p align="center"><small>Entering asset type, amount, and recipient address.</small></p>
       </td>
       <td width="33%">
-        <p align="center"><b>3. Contract Invocation</b></p>
-        <img src="media/successful-tx.png" alt="Contract Invocation" width="100%" />
-        <p align="center"><small>Soroban contract executes the 100% direct split.</small></p>
+        <p align="center"><b>3. Smart Fee Routing</b></p>
+        <img src="media/balance-display.png" alt="Routing" width="100%" />
+        <p align="center"><small>Real-time anchor comparison to find the best rate.</small></p>
       </td>
     </tr>
     <tr>
-      <td width="50%">
-        <p align="center"><b>4. Secure Signing</b></p>
-        <img src="media/wallet-connected.png" alt="Secure Signing" width="100%" />
-        <p align="center"><small>Transaction is signed securely via Freighter Wallet.</small></p>
+      <td width="33%">
+        <p align="center"><b>4. Contract Invocation</b></p>
+        <img src="media/successful-tx.png" alt="Invocation" width="100%" />
+        <p align="center"><small>Building the Soroban transaction for the split logic.</small></p>
       </td>
-      <td width="50%">
-        <p align="center"><b>5. Confirmation</b></p>
+      <td width="33%">
+        <p align="center"><b>5. Secure Signing</b></p>
+        <img src="media/wallet-connected.png" alt="Signing" width="100%" />
+        <p align="center"><small>User authorizes the transfer via Freighter Wallet.</small></p>
+      </td>
+      <td width="33%">
+        <p align="center"><b>6. Confirmation</b></p>
         <img src="media/tx-result.png" alt="Confirmation" width="100%" />
-        <p align="center"><small>Real-time polling confirms success on Stellar Expert.</small></p>
+        <p align="center"><small>Success confirmation with explorer links.</small></p>
       </td>
     </tr>
   </table>
