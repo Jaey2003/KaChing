@@ -17,7 +17,7 @@ export default function FeeComparison() {
   const amount = parseFloat(searchParams.get('amount') || '0');
   const asset = searchParams.get('asset') || 'USDC';
   const mode = searchParams.get('mode') || 'pockets';
-  const formRecipient = searchParams.get('recipient') || '';
+  const recipient = searchParams.get('recipient') || '';
   
   const quotes = mockAnchorQuotes(amount);
   const bestQuote = quotes[0];
@@ -72,7 +72,7 @@ export default function FeeComparison() {
       const formattedPockets = pocketData.map(p => ({
         name: p.name,
         percentage: p.percentage,
-        recipient: formRecipient || userAddress // Use form recipient, fallback to self
+        recipient: recipient || userAddress // Use form recipient, fallback to self
       }));
 
       const result = await processSplit(
@@ -89,7 +89,7 @@ export default function FeeComparison() {
         asset,
         fee: bestQuote.feePct,
         anchor: bestQuote.name,
-        recipient: formRecipient,
+        recipient: recipient,
         sender: userAddress || '',
         pockets: mode === 'pockets' ? formattedPockets.map((p, i) => ({
           ...pocketData[i],

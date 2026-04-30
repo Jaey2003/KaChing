@@ -199,30 +199,37 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
       </td>
       <td width="33%">
         <p align="center"><b>2. Transaction Details</b></p>
-        <img src="media/transfer-page.png" alt="Details" width="100%" />
+        <img src="media/transfer-info.png" alt="Details" width="100%" />
         <p align="center"><small>Entering asset type, amount, and recipient address.</small></p>
       </td>
       <td width="33%">
         <p align="center"><b>3. Smart Fee Routing</b></p>
-        <img src="media/balance-display.png" alt="Routing" width="100%" />
+        <img src="media/compare-routes.png" alt="Routing" width="100%" />
         <p align="center"><small>Real-time anchor comparison to find the best rate.</small></p>
       </td>
     </tr>
     <tr>
       <td width="33%">
         <p align="center"><b>4. Contract Invocation</b></p>
-        <img src="media/successful-tx.png" alt="Invocation" width="100%" />
+        <img src="media/processing-transaction.png" alt="Invocation" width="100%" />
         <p align="center"><small>Building the Soroban transaction for the split logic.</small></p>
       </td>
       <td width="33%">
         <p align="center"><b>5. Secure Signing</b></p>
-        <img src="media/wallet-connected.png" alt="Signing" width="100%" />
+        <img src="media/freigther-transaction-confirmation.png" alt="Signing" width="100%" />
         <p align="center"><small>User authorizes the transfer via Freighter Wallet.</small></p>
       </td>
       <td width="33%">
         <p align="center"><b>6. Confirmation</b></p>
-        <img src="media/tx-result.png" alt="Confirmation" width="100%" />
+        <img src="media/Transfer-success.png" alt="Confirmation" width="100%" />
         <p align="center"><small>Success confirmation with explorer links.</small></p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        <p align="center"><b>7. On-Chain Verification</b></p>
+        <img src="media/direct-transfer-smart-contract-deployment.png" alt="On-Chain Verification" width="100%" />
+        <p align="center"><small>Verified execution of the <code>process_split</code> function on Stellar Expert.</small></p>
       </td>
     </tr>
   </table>
