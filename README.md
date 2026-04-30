@@ -190,24 +190,7 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
 
 
 
-### 🏆 Success & Confirmation
 
-<div align="center">
-  <table style="width:100%">
-    <tr>
-      <td width="50%">
-        <p align="center"><b>Transaction Execution</b></p>
-        <img src="media/successful-tx.png" alt="Successful TX" width="100%" />
-        <p align="center"><small>Real-time feedback during Soroban contract invocation.</small></p>
-      </td>
-      <td width="50%">
-        <p align="center"><b>Success Result</b></p>
-        <img src="media/tx-result.png" alt="Transaction Result" width="100%" />
-        <p align="center"><small>Final confirmation with transaction hash and explorer link.</small></p>
-      </td>
-    </tr>
-  </table>
-</div>
 
 
 
