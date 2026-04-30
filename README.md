@@ -46,7 +46,16 @@
 
 #### **Smart Contract Setup:**
 ```bash
-# Build the contract
+# 1. Configure the Testnet network
+soroban config network add --rpc-url https://soroban-testnet.stellar.org --network-passphrase "Test SDF Network ; September 2015" testnet
+
+# 2. Generate a deployment identity
+soroban config identity create dev
+
+# 3. Fund the identity on Testnet
+soroban config identity fund dev --network testnet
+
+# 4. Build the contract
 soroban contract build
 
 # This will generate: target/wasm32-unknown-unknown/release/ka_ching.wasm
@@ -68,6 +77,8 @@ NEXT_PUBLIC_CONTRACT_ID=YOUR_DEPLOYED_CONTRACT_ID
 
 ### 3. Run Development Server
 ```bash
+# Ensure you are in the frontend directory
+cd frontend
 npm run dev
 ```
 
