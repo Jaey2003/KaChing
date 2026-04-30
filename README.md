@@ -239,47 +239,6 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
   </table>
 </div>
 
-## 🔄 Core Workflow: Financial Pockets
-
-<div align="center">
-  <table style="width:100%">
-    <tr>
-      <td width="33%">
-        <p align="center"><b>1. Initiation</b></p>
-        <img src="media/transfer-page.png" alt="Initiation" width="100%" />
-        <p align="center"><small>User selects "Financial Pockets" for multi-budget distribution.</small></p>
-      </td>
-      <td width="33%">
-        <p align="center"><b>2. Percentage Allocation</b></p>
-        <img src="media/pocket-split.png" alt="Allocation" width="100%" />
-        <p align="center"><small>Defining exact percentages for Tuition, Savings, and Emergency funds.</small></p>
-      </td>
-      <td width="33%">
-        <p align="center"><b>3. Vault Deposit</b></p>
-        <img src="media/processing-transaction.png" alt="Vault Deposit" width="100%" />
-        <p align="center"><small>The contract splits funds and stores them in a secure escrow ledger.</small></p>
-      </td>
-    </tr>
-    <tr>
-      <td width="33%">
-        <p align="center"><b>4. Budget Enforcement</b></p>
-        <img src="media/balance-display.png" alt="Budgeting" width="100%" />
-        <p align="center"><small>Funds are locked to their specific purpose (e.g., "Tuition" money cannot be spent elsewhere).</small></p>
-      </td>
-      <td width="33%">
-        <p align="center"><b>5. Controlled Spending</b></p>
-        <img src="media/pockets-page.png" alt="Spending" width="100%" />
-        <p align="center"><small>Receiver uses the "Use Pocket" feature to spend only from the assigned budget.</small></p>
-      </td>
-      <td width="33%">
-        <p align="center"><b>6. On-Chain Ledger</b></p>
-        <img src="media/Transfer-success.png" alt="Success" width="100%" />
-        <p align="center"><small>Real-time verification of remaining pocket balances on the blockchain.</small></p>
-      </td>
-    </tr>
-  </table>
-</div>
-
 ## 🌌 Stellar Features Leveraged
 - **Soroban Smart Contracts**: Programmatic distribution of funds.
 - **Stellar Assets (SAC)**: Interacting with Native (XLM) and Tokenized (USDC) assets.
