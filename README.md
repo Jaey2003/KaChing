@@ -146,8 +146,6 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
   </table>
 </div>
 
-
-
 ### 📱 Application Modules
 <div align="center">
   <table style="width:100%">
@@ -213,6 +211,41 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
 
 
 
+## 🔄 Core Workflow: Direct Transaction
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td width="33%">
+        <p align="center"><b>1. Initiation</b></p>
+        <img src="media/transfer-page.png" alt="Initiation" width="100%" />
+        <p align="center"><small>User enters asset, amount, and recipient address.</small></p>
+      </td>
+      <td width="33%">
+        <p align="center"><b>2. Smart Fee Routing</b></p>
+        <img src="media/balance-display.png" alt="Smart Fee Routing" width="100%" />
+        <p align="center"><small>KaChing scans anchors for the best possible rate.</small></p>
+      </td>
+      <td width="33%">
+        <p align="center"><b>3. Contract Invocation</b></p>
+        <img src="media/successful-tx.png" alt="Contract Invocation" width="100%" />
+        <p align="center"><small>Soroban contract executes the 100% direct split.</small></p>
+      </td>
+    </tr>
+    <tr>
+      <td width="50%">
+        <p align="center"><b>4. Secure Signing</b></p>
+        <img src="media/wallet-connected.png" alt="Secure Signing" width="100%" />
+        <p align="center"><small>Transaction is signed securely via Freighter Wallet.</small></p>
+      </td>
+      <td width="50%">
+        <p align="center"><b>5. Confirmation</b></p>
+        <img src="media/tx-result.png" alt="Confirmation" width="100%" />
+        <p align="center"><small>Real-time polling confirms success on Stellar Expert.</small></p>
+      </td>
+    </tr>
+  </table>
+</div>
 
 ## 🌌 Stellar Features Leveraged
 - **Soroban Smart Contracts**: Programmatic distribution of funds.
