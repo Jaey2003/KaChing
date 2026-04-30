@@ -121,6 +121,33 @@ After deployment, update your `.env.local` file with the generated Contract ID:
 NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
 ```
 
+## 📸 Screenshots
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td width="50%">
+        <p align="center"><b>Wallet Connected State</b></p>
+        <img src="media/wallet-connected.png" alt="Wallet Connected State" width="100%" />
+      </td>
+      <td width="50%">
+        <p align="center"><b>Balance Displayed</b></p>
+        <img src="media/balance-display.png" alt="Balance Displayed" width="100%" />
+      </td>
+    </tr>
+    <tr>
+      <td width="50%">
+        <p align="center"><b>Successful Testnet Transaction</b></p>
+        <img src="media/successful-tx.png" alt="Successful Testnet Transaction" width="100%" />
+      </td>
+      <td width="50%">
+        <p align="center"><b>Transaction Result</b></p>
+        <img src="media/tx-result.png" alt="Transaction Result" width="100%" />
+      </td>
+    </tr>
+  </table>
+</div>
+
 ## 🌌 Stellar Features Leveraged
 - **Soroban Smart Contracts**: Programmatic distribution of funds.
 - **Stellar Assets (SAC)**: Interacting with Native (XLM) and Tokenized (USDC) assets.
