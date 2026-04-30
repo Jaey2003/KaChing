@@ -149,7 +149,6 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
         <p align="center"><small>Confirmation of a Soroban smart contract execution, verifying funds are being routed correctly.</small></p>
       </td>
     </tr>
-
     <tr>
       <td colspan="2">
         <p align="center"><b>Transaction Result & Confirmation</b></p>
