@@ -129,19 +129,19 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
       <td width="50%">
         <p align="center"><b>Landing Page (Not Connected)</b></p>
         <img src="media/not-connected.png" alt="Landing Page" width="100%" />
-        <p align="center"><small>The entry point where users are prompted to connect their Stellar Freighter wallet to access the app.</small></p>
+        <p align="center"><small>The entry point where users are prompted to connect their Stellar Freighter wallet.</small></p>
       </td>
       <td width="50%">
-        <p align="center"><b>Wallet Connected State</b></p>
-        <img src="media/wallet-connected.png" alt="Wallet Connected State" width="100%" />
-        <p align="center"><small>After a secure connection, the app displays the user's truncated public key and unlocks the dashboard.</small></p>
+        <p align="center"><b>Freighter Connection Request</b></p>
+        <img src="media/wallet-connected.png" alt="Freighter Connection Request" width="100%" />
+        <p align="center"><small>Secure interaction with the Freighter browser extension to authorize the application.</small></p>
       </td>
     </tr>
     <tr>
       <td width="50%">
-        <p align="center"><b>Dashboard (Balance Displayed)</b></p>
-        <img src="media/balance-display.png" alt="Balance Displayed" width="100%" />
-        <p align="center"><small>Real-time view of Stellar account balances (XLM/USDC) and progress tracking for Financial Pockets.</small></p>
+        <p align="center"><b>Main Dashboard (Connected State)</b></p>
+        <img src="media/balance-display.png" alt="Dashboard" width="100%" />
+        <p align="center"><small>The live interface after connection, showing real-time account balances and financial pocket tracking.</small></p>
       </td>
       <td width="50%">
         <p align="center"><b>Successful Testnet Transaction</b></p>
@@ -149,6 +149,7 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
         <p align="center"><small>Confirmation of a Soroban smart contract execution, verifying funds are being routed correctly.</small></p>
       </td>
     </tr>
+
     <tr>
       <td colspan="2">
         <p align="center"><b>Transaction Result & Confirmation</b></p>
