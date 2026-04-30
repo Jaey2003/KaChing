@@ -146,23 +146,7 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
   </table>
 </div>
 
-### 🔄 Transfer & Split Flow
-<div align="center">
-  <table style="width:100%">
-    <tr>
-      <td width="50%">
-        <p align="center"><b>Direct Transfer</b></p>
-        <img src="media/direct-transfer.png" alt="Direct Transfer" width="100%" />
-        <p align="center"><small>Simple one-to-one transfer interface for any Stellar address.</small></p>
-      </td>
-      <td width="50%">
-        <p align="center"><b>Financial Pockets</b></p>
-        <img src="media/pocket-split.png" alt="Financial Pockets" width="100%" />
-        <p align="center"><small>Configuring multi-recipient splits with percentage-based allocation.</small></p>
-      </td>
-    </tr>
-  </table>
-</div>
+
 
 ### 📱 Application Modules
 <div align="center">
