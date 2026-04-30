@@ -169,6 +169,18 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
   <table style="width:100%">
     <tr>
       <td width="50%">
+        <p align="center"><b>Main Dashboard</b></p>
+        <img src="media/balance-display.png" alt="Dashboard" width="100%" />
+        <p align="center"><small>Primary account overview showing total balance and recent pocket progress.</small></p>
+      </td>
+      <td width="50%">
+        <p align="center"><b>Send Money (Transfer)</b></p>
+        <img src="media/transfer-page.png" alt="Transfer Page" width="100%" />
+        <p align="center"><small>Central hub for selecting between Direct Transfers or Financial Pocket splits.</small></p>
+      </td>
+    </tr>
+    <tr>
+      <td width="50%">
         <p align="center"><b>Pockets Management</b></p>
         <img src="media/pockets-page.png" alt="Pockets Page" width="100%" />
         <p align="center"><small>View and manage existing financial pockets and their allocation history.</small></p>
@@ -193,6 +205,8 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
     </tr>
   </table>
 </div>
+
+
 
 ### 🏆 Success & Confirmation
 
