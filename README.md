@@ -123,41 +123,65 @@ NEXT_PUBLIC_CONTRACT_ID=CDRRTP... (your-new-id)
 
 ## 📸 Screenshots
 
+### 🟢 Onboarding Flow
 <div align="center">
   <table style="width:100%">
     <tr>
-      <td width="50%">
-        <p align="center"><b>Landing Page (Not Connected)</b></p>
+      <td width="33%">
+        <p align="center"><b>Landing Page</b></p>
         <img src="media/not-connected.png" alt="Landing Page" width="100%" />
-        <p align="center"><small>The entry point where users are prompted to connect their Stellar Freighter wallet.</small></p>
+        <p align="center"><small>Entry point with "Connect Wallet" prompt.</small></p>
       </td>
-      <td width="50%">
-        <p align="center"><b>Freighter Connection Request</b></p>
-        <img src="media/wallet-connected.png" alt="Freighter Connection Request" width="100%" />
-        <p align="center"><small>Secure interaction with the Freighter browser extension to authorize the application.</small></p>
+      <td width="33%">
+        <p align="center"><b>Freighter Approval</b></p>
+        <img src="media/wallet-connected.png" alt="Freighter Request" width="100%" />
+        <p align="center"><small>Secure wallet connection request.</small></p>
       </td>
-    </tr>
-    <tr>
-      <td width="50%">
-        <p align="center"><b>Main Dashboard (Connected State)</b></p>
+      <td width="33%">
+        <p align="center"><b>Main Dashboard</b></p>
         <img src="media/balance-display.png" alt="Dashboard" width="100%" />
-        <p align="center"><small>The live interface after connection, showing real-time account balances and financial pocket tracking.</small></p>
-      </td>
-      <td width="50%">
-        <p align="center"><b>Successful Testnet Transaction</b></p>
-        <img src="media/successful-tx.png" alt="Successful Testnet Transaction" width="100%" />
-        <p align="center"><small>Confirmation of a Soroban smart contract execution, verifying funds are being routed correctly.</small></p>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <p align="center"><b>Transaction Result & Confirmation</b></p>
-        <img src="media/tx-result.png" alt="Transaction Result" width="100%" />
-        <p align="center"><small>Final transaction receipt showing the specific amounts distributed to each pocket and a link to the Stellar Expert explorer.</small></p>
+        <p align="center"><small>Live balances and pocket tracking.</small></p>
       </td>
     </tr>
   </table>
 </div>
+
+### 🔄 Transfer & Split Flow
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td width="50%">
+        <p align="center"><b>Direct Transfer</b></p>
+        <img src="media/direct-transfer.png" alt="Direct Transfer" width="100%" />
+        <p align="center"><small>Simple one-to-one transfer interface for any Stellar address.</small></p>
+      </td>
+      <td width="50%">
+        <p align="center"><b>Financial Pockets</b></p>
+        <img src="media/pocket-split.png" alt="Financial Pockets" width="100%" />
+        <p align="center"><small>Configuring multi-recipient splits with percentage-based allocation.</small></p>
+      </td>
+    </tr>
+  </table>
+</div>
+
+### 🏆 Success & Confirmation
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td width="50%">
+        <p align="center"><b>Transaction Execution</b></p>
+        <img src="media/successful-tx.png" alt="Successful TX" width="100%" />
+        <p align="center"><small>Real-time feedback during Soroban contract invocation.</small></p>
+      </td>
+      <td width="50%">
+        <p align="center"><b>Success Result</b></p>
+        <img src="media/tx-result.png" alt="Transaction Result" width="100%" />
+        <p align="center"><small>Final confirmation with transaction hash and explorer link.</small></p>
+      </td>
+    </tr>
+  </table>
+</div>
+
 
 
 
